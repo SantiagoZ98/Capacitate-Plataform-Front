@@ -202,16 +202,17 @@ export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
                       aria-label="Close"
                     ></button>
                   </div>
-                  <div className="modal-body text-center" style={{ backgroundColor: '#fff', padding: '20px' }}>
+                  <div className="modal-body text-center" style={{ backgroundColor: '#fff', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
                     <img
-                      src={nivel.url}
+                      src={nivel.url + '?t=' + new Date().getTime()}
                       alt="Infografía"
-                      className="img-fluid rounded"
-                      style={{ maxHeight: '600px', objectFit: 'contain' }}
+                      className="img-fluid"
+                      style={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'contain' }}
                       onError={(e) => {
                         console.error('Error cargando imagen:', nivel.url);
-                        e.target.src = '/img/error-imagen.png';
+                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%23999"%3ENo se pudo cargar la imagen%3C/text%3E%3C/svg%3E';
                       }}
+                      crossOrigin="anonymous"
                     />
                   </div>
                   <div className="modal-footer" style={{ backgroundColor: '#f8f9fa' }}>
