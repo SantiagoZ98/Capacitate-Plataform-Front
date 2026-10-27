@@ -189,9 +189,10 @@ export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
               tabIndex="-1"
               aria-hidden="true"
               onClick={(e) => e.stopPropagation()}
+              style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
             >
               <div className="modal-dialog modal-lg modal-dialog-centered">
-                <div className="modal-content">
+                <div className="modal-content" style={{ backgroundColor: '#fff' }}>
                   <div className="modal-header">
                     <h5 className="modal-title">{nivel.titulo}</h5>
                     <button
@@ -201,12 +202,20 @@ export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
                       aria-label="Close"
                     ></button>
                   </div>
-                  <div className="modal-body text-center">
+                  <div className="modal-body text-center" style={{ backgroundColor: '#fff', padding: '20px' }}>
                     <img
                       src={nivel.url}
                       alt="Infografía"
                       className="img-fluid rounded"
+                      style={{ maxHeight: '600px', objectFit: 'contain' }}
+                      onError={(e) => {
+                        console.error('Error cargando imagen:', nivel.url);
+                        e.target.src = '/img/error-imagen.png';
+                      }}
                     />
+                  </div>
+                  <div className="modal-footer" style={{ backgroundColor: '#f8f9fa' }}>
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                   </div>
                 </div>
               </div>
