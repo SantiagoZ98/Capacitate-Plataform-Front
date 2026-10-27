@@ -53,88 +53,59 @@ export default function CoursesTTHH() {
     }
   ];
 
-  // CARGAR CURSOS DESDE LA API Y COMBINAR CON ESTÁTICOS
+  // SOLO USAR CURSOS ESTÁTICOS
   const cargarCursosDelAPI = async () => {
     try {
       setCargandoCursos(true);
-      const response = await fetch(`${API_URL}/api/cursos/disponibles`);
-      const data = await response.json();
-      
-      // Filtrar solo cursos de "Talento Humano" que estén activos
-      const cursosDinamicos = (data.data || [])
-        .filter(c => c.proceso_name ==="Administrador" && c.activo)
-        .map((c) => ({
-          id: c.id,
-          name: c.nombre,
-          desc: c.descripcion,
-          link: `/curso/${c.id}`, // Usa el visor dinámico
-          dbName: `curso_${c.id}`, // Identificador único
-          bloqueado: false,
-          esEstatico: false,
-          fecha_inicio: c.fecha_inicio || null
-        }));
-      
-      // Combinar: primero dinámicos, luego estáticos
-      const todosCursos = [...cursosDinamicos, ...cursosEstaticos];
-      setCourses(todosCursos);
-      console.log('✅ Cursos cargados:', cursosDinamicos.length, '+ Estáticos:', cursosEstaticos.length);
+      setCourses(cursosEstaticos);
+      console.log('✅ Cursos cargados: 4 estáticos');
     } catch (error) {
       console.error('❌ Error cargando cursos:', error);
-      // Si hay error, mostrar solo estáticos
       setCourses(cursosEstaticos);
     } finally {
       setCargandoCursos(false);
     }
   };
 
-  // FUNCIÓN PARA CARGAR CURSOS COMPLETADOS
+  // FUNCIÓN PARA CARGAR CURSOS COMPLETADOS - SOLO DESDE /progreso/cursos-completados
   const cargarCursosCompletados = async () => {
-    if (!nombre) return;
+    if (!nombre) {
+      console.log('⚠️ No hay nombre de usuario');
+      return;
+    }
     
     try {
-      const token = localStorage.getItem("user_token");
-
-      const [respDinamicos, respEstaticos] = await Promise.all([
-        fetch(`${API_URL}/api/inscripciones/mis-capacitaciones`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`${API_URL}/api/progreso/cursos-completados/${encodeURIComponent(nombre)}`)
-      ]);
-
-      const completadosObj = {};
-
-      // Cursos dinámicos: completados si tienen mejor_puntaje
-      const dataDinamicos = await respDinamicos.json();
-      if (dataDinamicos.success && dataDinamicos.data) {
-        dataDinamicos.data.forEach(inscripcion => {
-          if (inscripcion.mejor_puntaje !== null && inscripcion.mejor_puntaje !== undefined) {
-            completadosObj[`curso_${inscripcion.curso_id}`] = true;
-          }
-        });
+      console.log(`🔍 Cargando cursos completados para: ${nombre}`);
+      const response = await fetch(`${API_URL}/api/progreso/cursos-completados/${encodeURIComponent(nombre)}`);
+      
+      if (!response.ok) {
+        console.error(`❌ Error en respuesta: ${response.status}`);
+        return;
       }
 
-      // Cursos estáticos: completados según cursos_completados en BD
-      const dataEstaticos = await respEstaticos.json();
+      const dataEstaticos = await response.json();
       console.log('📥 Respuesta de /cursos-completados:', dataEstaticos);
-      if (dataEstaticos.ok && dataEstaticos.cursosCompletados) {
+      
+      const completadosObj = {};
+      
+      if (dataEstaticos.ok && dataEstaticos.cursosCompletados && Array.isArray(dataEstaticos.cursosCompletados)) {
         console.log('📊 Cursos completados de BD:', dataEstaticos.cursosCompletados);
         dataEstaticos.cursosCompletados.forEach(curso => {
-          console.log(`  - Marcando como completado: ${curso}`);
+          console.log(`  ✅ Marcando como completado: ${curso}`);
           completadosObj[curso] = true;
         });
       }
 
       console.log('✅ Objeto completados final:', completadosObj);
       setCursosCompletados(completadosObj);
-      console.log('✅ Cursos completados:', Object.keys(completadosObj).length);
+      console.log(`📊 Total cursos completados: ${Object.keys(completadosObj).length}`);
     } catch (error) {
-      console.error("⚠ Error cargando cursos completados:", error);
+      console.error("❌ Error cargando cursos completados:", error);
     }
   };
 
   // Cargar progreso al entrar por primera vez
   useEffect(() => {
-    // Cargar cursos desde API
     cargarCursosDelAPI();
 
     if (nombre) {
@@ -145,20 +116,22 @@ export default function CoursesTTHH() {
   // Refrescar cuando se regresa desde un curso
   useEffect(() => {
     if (location.state && location.state.refrescar) {
+      console.log('🔄 Refrescando cursos...');
       cargarCursosCompletados();
       cargarCursosDelAPI();
-      
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
 
   // Verificar si un curso específico está completado
   const estaCursoCompletado = (cursoDbName) => {
-    return cursosCompletados[cursoDbName] || false;
+    const completado = cursosCompletados[cursoDbName] || false;
+    console.log(`🔍 Curso ${cursoDbName} completado: ${completado}`);
+    return completado;
   };
 
   // Calcular progreso manualmente basado en cursos completados
-  const _calcularProgresoManual = () => {
+  const calcularProgresoManual = () => {
     const totalCursos = courses.length;
     const cursosCompletadosCount = courses.filter(c => estaCursoCompletado(c.dbName)).length;
     return Math.round((cursosCompletadosCount / totalCursos) * 100);
@@ -168,17 +141,15 @@ export default function CoursesTTHH() {
   const manejarClicCurso = (curso) => {
     if (curso.bloqueado) return;
     if (estaCursoCompletado(curso.dbName)) {
-      // Si el curso ya está completado, preguntar si quiere repasar
       if (window.confirm(`Ya completaste "${curso.name}". ¿Deseas repasarlo?`)) {
         navigate(curso.link);
       }
     } else {
-      // Si no está completado, iniciar normalmente
       navigate(curso.link);
     }
   };
 
-  // Solo los 4 temas cuentan para habilitar la prueba (Reglamento no es requisito)
+  // Solo los 4 temas cuentan para habilitar la prueba
   const TTHH_REQUERIDOS = ['derechos_laborales', 'igualdad_genero', 'erradicacion_Violencia', 'otrosRelacionados'];
   const listo4Cursos = TTHH_REQUERIDOS.every(dbName => cursosCompletados[dbName]);
   const completadosRequeridos = TTHH_REQUERIDOS.filter(dbName => cursosCompletados[dbName]).length;
@@ -298,70 +269,48 @@ export default function CoursesTTHH() {
           })}
         </div>
 
-        {/* Resumen de progreso 
+        {/* Resumen de progreso */}
         <div className="card mb-4">
           <div className="card-body">
             <h5 className="card-title">Resumen de progreso</h5>
-            <div className="row">
-              <div className="col-md-6">
-                <ul className="list-group">
-                  {courses.map(curso => (
-                    <li key={curso.id} className="list-group-item d-flex justify-content-between align-items-center">
-                      <span>{curso.name.split('. ')[1]}</span>
-                      <span className={`badge ${estaCursoCompletado(curso.dbName) ? 'bg-success' : 'bg-secondary'}`}>
-                        {estaCursoCompletado(curso.dbName) ? 'Completado' : 'Pendiente'}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="col-md-6">
-                <div className="text-center">
-                  <div className="display-4 text-primary">
-                    {courses.filter(c => estaCursoCompletado(c.dbName)).length}/{courses.length}
-                  </div>
-                  <p className="text-muted">Cursos completados</p>
-                  <div className="progress" style={{ height: '20px' }}>
-                    <div 
-                      className="progress-bar bg-success" 
-                      style={{ 
-                        width: `${(courses.filter(c => estaCursoCompletado(c.dbName)).length / courses.length) * 100}%` 
-                      }}
-                    ></div>
-                  </div>
-                </div>
+            <p className="mb-2">Cursos completados: <strong>{completadosRequeridos} de 4</strong></p>
+            <div className="progress mb-3">
+              <div
+                className="progress-bar bg-success"
+                role="progressbar"
+                style={{ width: `${(completadosRequeridos / 4) * 100}%` }}
+                aria-valuenow={completadosRequeridos}
+                aria-valuemin="0"
+                aria-valuemax="4"
+              >
+                {Math.round((completadosRequeridos / 4) * 100)}%
               </div>
             </div>
-          </div>
-        </div>
-        */}
-
-        {/* PRUEBA FINAL */}
-        <div className="text-center mt-5">
-          {listo4Cursos ? (
-            localStorage.getItem("pruebaAprobada") === "true" ? (
-              <div className="alert alert-success py-3">
-                <i className="bi bi-award me-2"></i>
-                ¡Felicidades! Has completado toda la capacitación y aprobado la prueba final.
+            {listo4Cursos ? (
+              <div className="alert alert-success mb-0">
+                ✅ ¡Has completado todos los cursos requeridos! Ya puedes tomar la prueba final.
               </div>
             ) : (
-              <button
-                className="btn btn-final"
-                onClick={() => navigate("/prueba")}
-              >
-                Ir a la prueba final 📝
-              </button>
-            )
-          ) : (
-            <div className="alert alert-info">
-              <i className="bi bi-info-circle me-2"></i>
-              La prueba final se habilitará cuando completes los 4 temas requeridos ({completadosRequeridos}/4 completados).
-            </div>
-          )}
+              <div className="alert alert-info mb-0">
+                📚 Completa {4 - completadosRequeridos} curso(s) más para habilitar la prueba final.
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* Botón para acceder a la prueba */}
+        {listo4Cursos && (
+          <div className="text-center">
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={() => navigate('/courses/pruebatthh')}
+            >
+              <i className="bi bi-pencil-square me-2"></i>
+              Ir a la Prueba Final
+            </button>
+          </div>
+        )}
       </div>
-
     </div>
   );
 }
