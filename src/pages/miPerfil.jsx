@@ -472,7 +472,7 @@ export default function MiPerfil() {
                 <th>CURSO</th>
                 <th>PROCESO</th>
                 <th>ESTADO</th>
-                <th>CALIFICACIÓN</th>
+
                 <th>RESULTADO</th>
               </tr>
             </thead>
@@ -505,16 +505,12 @@ export default function MiPerfil() {
               ) : (
                 capacitacionesFiltradas.map(cap => {
                   const tieneNota = cap.mejor_puntaje !== null && cap.mejor_puntaje !== undefined;
-                  const estadoColor = tieneNota ? 'success' : 'secondary';
-                  const estadoTexto = tieneNota ? 'Completado' : 'Sin Completar';
-
+                  
                   return (
                     <tr key={cap.id}>
                       <td><strong>{cap.curso_nombre}</strong></td>
                       <td>{cap.proceso}</td>
-                      <td>
-                        <span className={`badge bg-${estadoColor}`}>{estadoTexto}</span>
-                      </td>
+                      
                       <td>
                         {tieneNota ? (
                           <span style={{ color: cap.evaluacion_aprobada ? '#198754' : '#dc3545', fontWeight: 600, fontSize: '13px' }}>
