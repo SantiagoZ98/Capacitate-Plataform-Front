@@ -106,7 +106,8 @@ export default function Curso2({ curso }) {
     // MARCAR CURSO COMO COMPLETADO EN LA BD
     const marcarCursoCompletadoEnBD = useCallback(async () => {
       try {
-        console.log("Marcando curso como completado en BD...");
+        console.log("📌 Marcando curso como completado en BD...");
+        console.log(`   Datos a enviar: nombre="${nombre}", curso="${nombreCursoBD}"`);
         
         // Enviar el total de niveles del curso
         const totalItems = niveles.length;
@@ -121,7 +122,11 @@ export default function Curso2({ curso }) {
           })
         });
         
+        console.log(`📡 Respuesta HTTP: ${response.status}`);
+        
         const result = await response.json();
+        
+        console.log(`📥 Respuesta JSON:`, result);
         
         if (response.ok && result.ok) {
           console.log("✅ Curso marcado como completado:", result);
@@ -134,11 +139,11 @@ export default function Curso2({ curso }) {
           
           return true;
         } else {
-          console.log("El curso aún no está completo o ya estaba marcado:", result);
+          console.log("❌ El curso aún no está completo o ya estaba marcado:", result);
           return false;
         }
       } catch (error) {
-        console.error("Error marcando curso como completado:", error);
+        console.error("❌ Error marcando curso como completado:", error);
         return false;
       }
     }, [nombre, nombreCursoBD, niveles.length]);
