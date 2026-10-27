@@ -29,20 +29,32 @@ export default function Curso2({ curso }) {
     useEffect(() => {
       const cargarProgresoBD = async () => {
         try {
+          console.log(`🔍 Cargando progreso para usuario: "${nombre}", curso: "${nombreCursoBD}"`);
+          
           // Cargar ítems completados de progreso_cursos
-          const res = await fetch(`${API_URL}/api/progreso/items/${nombre}/${nombreCursoBD}`);
+          const url = `${API_URL}/api/progreso/items/${nombre}/${nombreCursoBD}`;
+          console.log(`📡 Llamando a: ${url}`);
+          
+          const res = await fetch(url);
           const data = await res.json();
-  
+
+          console.log(`📥 Respuesta del servidor:`, data);
+
           const itemsGuardados = data.completados || [];
-  
+          
+          console.log(`✅ Items guardados en BD:`, itemsGuardados);
+          console.log(`📊 Niveles disponibles:`, niveles.map(n => n.id));
+
           const nuevosNiveles = niveles.map(nivel =>
             itemsGuardados.includes(nivel.id)
               ? { ...nivel, completado: true }
               : nivel
           );
-  
+
+          console.log(`🎯 Nuevos niveles después de mapear:`, nuevosNiveles);
+
           setNiveles(nuevosNiveles);
-  
+
           // Determinar si el curso ya está completado en la BD (progreso_cursos)
           const nivelIds = niveles.map(n => n.id);
           const allCompleted = nivelIds.every(id => itemsGuardados.includes(id));
