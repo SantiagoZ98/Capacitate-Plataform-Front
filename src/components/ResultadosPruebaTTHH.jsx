@@ -3,6 +3,7 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import '../styles/components/resultadosPruebaTTHH.css';
 
 export default function ResultadosPruebaTTHH() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -70,7 +71,7 @@ export default function ResultadosPruebaTTHH() {
   };
 
   // GENERAR CERTIFICADO PDF individual (función reutilizable con fecha personalizada)
-  const generarCertificadoConFecha = async (persona, fecha = "Agosto 2026") => {
+  const generarCertificadoConFecha = async (persona, fecha = "Octubre 2026") => {
     // jsPDF v3 no carga URLs directamente: precargar imágenes como base64
     const toBase64 = (url) =>
       fetch(url)
@@ -375,11 +376,11 @@ export default function ResultadosPruebaTTHH() {
             <i className="bi bi-file-earmark-excel me-1"></i>
             Exportar Excel (aprobados)
           </button>
-          <button className="btn btn-primary btn-sm" onClick={descargarTodosCertificados}>
+          <button className="btn-anio-2026" onClick={descargarTodosCertificados}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
             Descargar Todos (Agosto 2026)
           </button>
-          <button className="btn btn-info btn-sm" onClick={descargarTodosCertificados2025}>
+          <button className="btn-anio-2025" onClick={descargarTodosCertificados2025}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
             Descargar Todos (Octubre 2025)
           </button>
@@ -438,7 +439,7 @@ export default function ResultadosPruebaTTHH() {
                 <th>Intentos</th>
                 <th>Estado</th>
                 <th>Fecha</th>
-                <th>Certificado</th>
+                {/*<th>Certificado</th>*/}
               </tr>
             </thead>
             <tbody>
@@ -470,7 +471,7 @@ export default function ResultadosPruebaTTHH() {
                       ? new Date(r.ultima_fecha).toLocaleDateString("es-EC")
                       : "-"}
                   </td>
-                  <td>
+                  {/*<td>
                     {r.aprobado ? (
                       <button
                         className="btn btn-outline-primary btn-sm"
@@ -482,7 +483,7 @@ export default function ResultadosPruebaTTHH() {
                     ) : (
                       <span className="text-muted small">—</span>
                     )}
-                  </td>
+                  </td>*/}
                 </tr>
               ))}
             </tbody>

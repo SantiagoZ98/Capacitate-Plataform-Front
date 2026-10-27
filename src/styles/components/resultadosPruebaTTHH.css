@@ -1,0 +1,27 @@
+.btn-anio-2026 {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #007bff !important;
+  border: 1px solid #007bff !important;
+  color: #fff;
+}
+
+.btn-anio-2026:hover {
+  background-color: #0056b3 !important;
+  border: 1px solid #0056b3 !important;
+}
+
+.btn-anio-2025{
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #17a2b8 !important;
+  border: 1px solid #17a2b8 !important;
+  color: #fff;
+}
+
+.btn-anio-2025:hover {
+  background-color: #117a8b !important;
+  border: 1px solid #117a8b !important;
+}
