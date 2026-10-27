@@ -1,0 +1,258 @@
+.container-fluid {
+  width: 80% !important; /* Ocupa el % del ancho */
+  height: 100% !important;
+  padding: 25px 15px !important;
+  background: rgba(255, 255, 255, 0.80) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 0px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.20) !important;
+  margin: 10px auto !important; 
+}
+
+@media (min-width: 768px) {
+  .container-fluid {
+    max-width: 85% !important;
+    padding: 50px 60px !important;
+    margin: 20px auto !important; 
+  }
+}
+
+body {
+  background-image: url("../../../public/img/capacitador-virtual.png");
+  background-size: cover;        /* cubre toda la pantalla */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;  /* no se mueve al hacer scroll */
+  background-color: #e9f1f1;     /* color de respaldo mientras carga */
+
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+}
+
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.form-control {
+  border-radius: 10px;
+  padding: 10px 12px !important;
+  height: 42px !important;
+  border: 1px solid #bcd7ef;
+  background: #f7f9fc;
+  font-size: 14px !important;
+  color: #000; 
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.form-control:focus {
+  background: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
+}
+
+
+/* BOTÓN PRINCIPAL */
+.btn-primary {
+  background-image: linear-gradient(135deg, #047630, #075122) !important;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  margin-top: 10px;
+  transition: 0.25s ease;
+}
+
+.btn-primary:hover {
+  background-image: linear-gradient(135deg, #047630, #075122) !important;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* BOTON PARA ADMIN DE PROCESO*/
+.btn-adminProceso{
+  background-size: 40px !important;  
+  background-repeat: no-repeat;
+  background-position: 12px !important;      
+  background-color: #979fa1 !important;
+  width: 100% !important;
+  height: auto !important;
+  border: none;
+  color: rgb(14, 15, 15);
+  padding: 15px 15px 15px 60px;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  display: inline-block;
+  font-size: 14px !important;
+  margin: 4px 0px;
+  cursor: pointer;
+  border-radius: 10px;
+  min-height: 60px !important;
+}
+
+@media (min-width: 768px) {
+  .btn-adminProceso {
+    padding: 20px 4px 20px 00px !important;
+    background-position: 20px center !important;
+    background-size: 70px !important;
+  }
+}
+
+.btn-adminProceso:hover {
+  background-color: #64e4e4 !important;
+  color: rgb(255, 255, 255);
+  transform: translateY(-2px);
+}
+
+/* BOTÓN ADMIN PRINCIPAL */
+.btn-adminPrincipal{
+  background-size: 40px !important;  
+  background-repeat: no-repeat;
+  background-position: 12px !important;      
+  background-color: transparent !important;
+  height: auto !important;
+  border: none;
+  color: rgb(3, 3, 3);
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  display: inline-block;
+  font-size: 14px !important;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  min-height: 60px !important;
+
+}
+.btn-adminPrincipal:hover {
+  background-color: transparent !important;
+  color: rgb(255, 255, 255);
+  transform: translateY(-2px);
+}
+@media (min-width: 768px) {
+  .btn-adminPrincipal {
+    padding: 30px 24px 50px 100px !important;
+    background-position: 20px center !important;
+    background-size: 70px !important;
+  }
+}
+
+/* ESPACIADO SUPERIOR */
+.mt-5 {
+  margin-top: 40px !important;
+}
+
+.form-control-custom {
+  border-radius: 10px;
+  padding: 10px 12px !important;
+  width: 80% !important;
+  height: 35px !important;
+  border: 1px solid #bcd7ef;
+  background: #f7f9fc;
+  font-size: 18px;
+  color: #000; 
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.form-control-custom:focus {
+  background: #ffffff;
+  border-color: #0d6efd;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
+  padding: 13px 12px !important;
+}
+
+@media (min-width: 768px) {
+  .form-control-custom {
+    padding: 13px 120px !important;
+  }
+}
+
+/* BOTON PARA ACCEDER*/
+.btn-continuar {
+  background-color: #11566b !important;
+  background-size: 50px !important;
+  background-repeat: no-repeat !important;
+  border: none;
+  padding: 24px 12px 24px 60px !important;
+  width: 100% !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  border-radius: 12px;
+  margin-top: 10px;
+  transition: 0.25s ease;
+  color: white;
+}
+
+.btn-continuar:hover {
+  background-color: #6499e4 !important;
+  transform: translateY(-2px);
+}
+@media (min-width: 768px) {
+  .btn-continuar {
+    width: 70% !important; 
+  }
+}
+
+.botones-container{
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;           
+  width: 100%;
+  margin-top: 20px;
+}
+
+
+.bienvenida-titulo {
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 800;
+  color: #000000;
+}
+
+.bienvenida-subtitulo {
+  font-size: clamp(40px, 3.5vw, 40px);
+  font-weight: 700;
+  color: #000000;
+  margin-top: -5px;
+}
+
+.instruccion-texto {
+  font-size: clamp(20px, 2.5vw, 24px);
+  color: #000000;
+  opacity: 0.9;
+  font-weight: bold;
+}
+.instruccion-texto2 {
+  font-size: 20px;
+  color: #000000;
+  opacity: 0.9;
+  font-weight: bold;
+}
+
+/* Placeholder color para inputs */
+.form-control::placeholder,
+.form-control-custom::placeholder {
+  color: #6c757d;
+  opacity: 0.9;
+}
+
+.no-transform {
+  text-transform: none !important;
+}

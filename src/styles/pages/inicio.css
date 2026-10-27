@@ -1,0 +1,59 @@
+/* Reseteo básico para React */
+html, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+.inicio-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;       /* Centra verticalmente */
+  justify-content: center;   /* Centra horizontalmente */
+  padding: 20px;
+  box-sizing: border-box;
+  background-image: url("/img/capacitador-virtual.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #e9f1f1;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+}
+
+/* Tarjeta */
+.inicio-card {
+  max-width: 600px;
+  width: 100%;
+  padding: 40px 35px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Botón */
+.inicio-btn {
+  background: #ffffff; /* Verde */
+  border: 2px solid #01244d; /* Verde */
+  color: #01244d;
+  border-radius: 8px;
+  padding: 14px 35px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.inicio-btn:hover {
+  background: #01244d; /* Verde */
+  color: #ffffff;
+  border: 2px solid #01244d; /* Verde */
+}
