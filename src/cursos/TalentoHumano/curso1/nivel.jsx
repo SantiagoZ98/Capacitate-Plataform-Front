@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom"; // <-- IMPORTANTE: Importamos el Portal
 import { Link, useLocation } from "react-router-dom";
 
 export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
@@ -359,7 +360,7 @@ export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
           </div>
         )}
 
-        {/* 🖼️ IMAGEN */}
+        {/* 🖼️ IMAGEN - CORREGIDO CON PORTAL */}
         {nivel.tipo === "imagen" && (
           <>
             <button
@@ -373,32 +374,38 @@ export default function Nivel({ nivel, puedeAcceder, marcarCompletado }) {
             >
               <i className="bi bi-image me-2"></i> Ver infografía
             </button>
-            <div className="modal fade" id={`modalImagen${nivel.id}`} tabIndex="-1" aria-hidden="true" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-              <div className="modal-dialog modal-lg modal-dialog-centered">
-                <div className="modal-content" style={{ backgroundColor: '#fff' }}>
-                  <div className="modal-header">
-                    <h5 className="modal-title">{nivel.titulo}</h5>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div className="modal-body text-center" style={{ backgroundColor: '#fff', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-                    <img 
-                      src={nivel.url + '?t=' + new Date().getTime()} 
-                      alt="Infografía" 
-                      className="img-fluid" 
-                      style={{ maxHeight: '80vh', maxWidth: '100%', objectFit: 'contain' }}
-                      onError={(e) => {
-                        console.error('Error cargando imagen:', nivel.url);
-                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%23999"%3ENo se pudo cargar la imagen%3C/text%3E%3C/svg%3E';
-                      }}
-                      crossOrigin="anonymous"
-                    />
-                  </div>
-                  <div className="modal-footer" style={{ backgroundColor: '#f8f9fa' }}>
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+            {/* TELETRANSPORTAMOS EL MODAL AL BODY CON CREATEPORTAL */}
+            {createPortal(
+              <div className="modal fade" id={`modalImagen${nivel.id}`} tabIndex="-1" aria-hidden="true">
+                {/* Añadimos modal-dialog-scrollable para el scroll interno y modal-lg para que sea ancho */}
+                <div className="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5 className="modal-title">{nivel.titulo}</h5>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div className="modal-body text-center p-0">
+                      <img 
+                        src={nivel.url + '?t=' + new Date().getTime()} 
+                        alt="Infografía" 
+                        className="img-fluid w-100" 
+                        onError={(e) => {
+                          console.error('Error cargando imagen:', nivel.url);
+                          e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="20" fill="%23999"%3ENo se pudo cargar la imagen%3C/text%3E%3C/svg%3E';
+                        }}
+                        crossOrigin="anonymous"
+                      />
+                    </div>
+                    <div className="modal-footer">
+                      <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div>,
+              document.body
+            )}
           </>
         )}
 
