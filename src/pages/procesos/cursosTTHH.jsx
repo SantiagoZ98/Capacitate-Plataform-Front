@@ -115,12 +115,16 @@ export default function CoursesTTHH() {
 
       // Cursos estáticos: completados según cursos_completados en BD
       const dataEstaticos = await respEstaticos.json();
+      console.log('📥 Respuesta de /cursos-completados:', dataEstaticos);
       if (dataEstaticos.ok && dataEstaticos.cursosCompletados) {
+        console.log('📊 Cursos completados de BD:', dataEstaticos.cursosCompletados);
         dataEstaticos.cursosCompletados.forEach(curso => {
+          console.log(`  - Marcando como completado: ${curso}`);
           completadosObj[curso] = true;
         });
       }
 
+      console.log('✅ Objeto completados final:', completadosObj);
       setCursosCompletados(completadosObj);
       console.log('✅ Cursos completados:', Object.keys(completadosObj).length);
     } catch (error) {
