@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 
 import Home from './pages/inicio';
 import CoursesTTHH from './pages/procesos/cursosTTHH';
-
 import AdminPrincipal from './pages/adminPrincipal';
 import Login from './pages/login';
 import LoginNombre from './pages/principal';
@@ -15,7 +14,6 @@ import Curso from './cursos/TalentoHumano/curso1/curso1';
 import Curso2 from './cursos/TalentoHumano/curso2/curso2';
 import Curso3 from './cursos/TalentoHumano/curso3/curso3';
 import Curso4 from './cursos/TalentoHumano/curso4/curso4';
-import Curso5 from './cursos/TalentoHumano/curso5/curso5';
 import Navbar from './pages/navbar';
 import Navbar2 from './pages/navbar2';
 import LoginAdminProceso from './pages/adminProcesos';
@@ -23,7 +21,6 @@ import ScrollToTop from './pages/scrollToTop';
 import Soporte from './pages/soporte';
 import AdminProcesoHome from './pages/adminProcesoHome';
 import MiPerfil from './pages/miPerfil';
-import DocumentoForm from './cursos/TalentoHumano/curso5/documentoForm';
 import Sidebar from './pages/sidebar';
 import CambiarPassword from './pages/cambiarPassword';
 import Prueba from './pages/prueba';
@@ -32,7 +29,7 @@ import { cursoDerechosLaborales } from "./cursos/TalentoHumano/curso1/datos_curs
 import { cursoIgualdadGenero } from "./cursos/TalentoHumano/curso2/datos_curso2";
 import { cursoErradicacionViolencia } from "./cursos/TalentoHumano/curso3/datos_curso3";
 import { cursoOtrosRelacionados } from './cursos/TalentoHumano/curso4/datos_curso4';
-import {cursoReglamentoInterno} from './cursos/TalentoHumano/curso5/datos_curso5';
+
 
 
 
@@ -278,7 +275,6 @@ function App() {
           <Route path="/inicio" element={<ProtectedUserRoute><Home /></ProtectedUserRoute>} />
           <Route path="/soporte" element={<ProtectedUserRoute><Soporte /></ProtectedUserRoute>} />
           <Route path="/mi-perfil" element={<ProtectedUserRoute><MiPerfil /></ProtectedUserRoute>} />
-          <Route path="/documento-form" element={<DocumentoForm />} />
           <Route 
             path="/courses/tthh" 
             element={
@@ -325,14 +321,6 @@ function App() {
             } 
           />
 
-          <Route 
-            path="/courses/reglamentointerno" 
-            element={
-              <ProtectedUserRoute>
-                <Curso5 curso={cursoReglamentoInterno} />
-              </ProtectedUserRoute>
-            } 
-          />
 
           {/* Prueba final protegida */}
           <Route 

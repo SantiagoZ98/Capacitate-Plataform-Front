@@ -322,32 +322,6 @@ export default function Prueba() {
             </p>
           </div>
 
-          <h5 className="mt-4 mb-3 fw-bold">Revisión de respuestas</h5>
-          {questions.map((q) => {
-            const seleccionada = answers[q.id];
-            const correcta = seleccionada === q.correct;
-            return (
-              <div key={q.id} className={`card mb-3 border-${correcta ? 'success' : 'danger'}`}>
-                <div className={`card-header bg-${correcta ? 'success' : 'danger'} bg-opacity-10 d-flex align-items-center gap-2`}>
-                  <i className={`bi bi-${correcta ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'}`}></i>
-                  <span className="fw-semibold">{q.id}. {q.text}</span>
-                </div>
-                <div className="card-body">
-                  {q.options.map((op, idx) => (
-                    <div key={idx} className={`mb-1 px-2 py-1 rounded
-                      ${idx === q.correct ? 'bg-success bg-opacity-15 fw-semibold' : ''}
-                      ${idx === seleccionada && idx !== q.correct ? 'bg-danger bg-opacity-15 text-decoration-line-through' : ''}
-                    `}>
-                      {idx === q.correct && <i className="bi bi-check-lg text-success me-1"></i>}
-                      {idx === seleccionada && idx !== q.correct && <i className="bi bi-x-lg text-danger me-1"></i>}
-                      {op}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-
           <div className="text-center mt-4">
             <button 
               onClick={() => navigate("/courses/tthh")} 
@@ -380,32 +354,6 @@ export default function Prueba() {
               </button>
             </div>
           </div>
-
-          <h5 className="mt-4 mb-3 fw-bold">Revisión de respuestas</h5>
-          {questions.map((q) => {
-            const seleccionada = answers[q.id];
-            const correcta = seleccionada === q.correct;
-            return (
-              <div key={q.id} className={`card mb-3 border-${correcta ? 'success' : 'danger'}`}>
-                <div className={`card-header bg-${correcta ? 'success' : 'danger'} bg-opacity-10 d-flex align-items-center gap-2`}>
-                  <i className={`bi bi-${correcta ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'}`}></i>
-                  <span className="fw-semibold">{q.id}. {q.text}</span>
-                </div>
-                <div className="card-body">
-                  {q.options.map((op, idx) => (
-                    <div key={idx} className={`mb-1 px-2 py-1 rounded
-                      ${idx === q.correct ? 'bg-success bg-opacity-15 fw-semibold' : ''}
-                      ${idx === seleccionada && idx !== q.correct ? 'bg-danger bg-opacity-15 text-decoration-line-through' : ''}
-                    `}>
-                      {idx === q.correct && <i className="bi bi-check-lg text-success me-1"></i>}
-                      {idx === seleccionada && idx !== q.correct && <i className="bi bi-x-lg text-danger me-1"></i>}
-                      {op}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
         </div>
       )}
     </div>

@@ -15,16 +15,6 @@ export default function CoursesTTHH() {
 
   // Cursos estáticos originales (con su contenido existente)
   const cursosEstaticos = [
-    /*
-    { 
-      id: "estatico_1", 
-      name: "1. Reglamento Interno de Trabajo - Código de Ética - Política de Responsabilidad Social", 
-      desc: "Duración: 2 horas", 
-      link: "/courses/reglamentointerno",
-      dbName: "reglamentoInterno",
-      bloqueado: true,
-      esEstatico: true
-    }, */
     { 
       id: "estatico_2", 
       name: "1. Derechos laborales de mujeres y hombres", 

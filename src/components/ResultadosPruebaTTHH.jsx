@@ -69,8 +69,8 @@ export default function ResultadosPruebaTTHH() {
     saveAs(blob, `Aprobados_Prueba_TalentoHumano_${new Date().toISOString().split("T")[0]}.xlsx`);
   };
 
-  // GENERAR CERTIFICADO PDF individual
-  const generarCertificado = async (persona) => {
+  // GENERAR CERTIFICADO PDF individual (función reutilizable con fecha personalizada)
+  const generarCertificadoConFecha = async (persona, fecha = "Agosto 2026") => {
     // jsPDF v3 no carga URLs directamente: precargar imágenes como base64
     const toBase64 = (url) =>
       fetch(url)
@@ -141,7 +141,7 @@ export default function ResultadosPruebaTTHH() {
 
     doc.setFontSize(15);
     doc.setTextColor("#000000");
-    doc.text("Fecha: Agosto 2026", W / 2 + 105, 155, { align: "center" });
+    doc.text(`Fecha: ${fecha}`, W / 2 + 105, 155, { align: "center" });
     doc.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
 
     doc.setDrawColor(line);
@@ -153,7 +153,215 @@ export default function ResultadosPruebaTTHH() {
     doc.text("Abg. Mario Aguinaga", W / 2 + 40, H - 15, { align: "center" });
     doc.text("REPRESENTANTE LEGAL", W / 2 + 40, H - 7, { align: "center" });
 
+    return doc;
+  };
+
+  // GENERAR CERTIFICADO PDF individual (con fecha Agosto 2026)
+  const generarCertificado = async (persona) => {
+    const doc = await generarCertificadoConFecha(persona, "Agosto 2026");
     doc.save(`Certificado_${persona.nombre_completo}.pdf`);
+  };
+
+  // DESCARGAR TODOS LOS CERTIFICADOS EN UN SOLO PDF
+  const descargarTodosCertificados = async () => {
+    const aprobados = datos.filter((r) => r.aprobado);
+    if (aprobados.length === 0) {
+      alert("No hay certificados para descargar");
+      return;
+    }
+
+    const toBase64 = (url) =>
+      fetch(url)
+        .then((r) => r.blob())
+        .then(
+          (blob) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            })
+        );
+
+    const [logoBase64, firmaBase64] = await Promise.all([
+      toBase64("/img/safemedic.png"),
+      toBase64("/img/firma.png"),
+    ]);
+
+    const docFinal = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    for (let index = 0; index < aprobados.length; index++) {
+      const persona = aprobados[index];
+      
+      if (index > 0) {
+        docFinal.addPage();
+      }
+
+      const W = docFinal.internal.pageSize.getWidth();
+      const H = docFinal.internal.pageSize.getHeight();
+
+      const azulFondo1 = "#0d2d3e";
+      const azulFondo2 = "#00b8c6";
+      const dorado = "#d4af37";
+      const line = "#146781";
+
+      docFinal.setFillColor(azulFondo2);
+      docFinal.triangle(0, H, W * 0.40, H, 0, H * 0.5, "F");
+
+      docFinal.setFillColor(azulFondo1);
+      docFinal.triangle(0, 0, W * 0.28, 0, W*0, H-60, "F");
+
+      docFinal.setFillColor(dorado);
+      docFinal.circle(W * 0.08, H * 0.10, W * 0.07, "F");
+
+      docFinal.addImage(logoBase64, "PNG", W - 85, 5, 75, 25);
+      docFinal.setFont("garamond", "bold");
+      docFinal.setFontSize(70);
+      docFinal.setTextColor("#d4af37");
+      docFinal.text("CERTIFICADO", W / 2 + 40, 65, { align: "center" });
+
+      docFinal.setFont("helvetica", "normal");
+      docFinal.setFontSize(16);
+      docFinal.setTextColor("#444444");
+      docFinal.text("Otorgado a", W / 2 + 40, 80, { align: "center" });
+
+      docFinal.setFont("times", "italic");
+      docFinal.setFontSize(35);
+      docFinal.setTextColor("#000000");
+      docFinal.text(persona.nombre_completo, W / 2 + 30, 95, { align: "center" });
+
+      docFinal.setFont("helvetica", "normal");
+      docFinal.setFontSize(14);
+      docFinal.setTextColor("#000000");
+      docFinal.text(
+        "Por haber participado con éxito en la capacitación que abarca los siguientes temas:",
+        W / 2 + 35,
+        105,
+        { align: "center" }
+      );
+      docFinal.setFontSize(12);
+      docFinal.text("• Derechos laborales de hombres y mujeres", W / 2 + 40, 115, { align: "center" });
+      docFinal.text("• Igualdad de género", W / 2 + 18, 125, { align: "center" });
+      docFinal.text("• Erradicación de la violencia y no discriminación", W / 2 + 44, 135, { align: "center" });
+      docFinal.text("• Otros relacionados para establecer el trabajo de igual valor", W / 2 + 55, 145, { align: "center" });
+
+      docFinal.setFontSize(15);
+      docFinal.setTextColor("#000000");
+      docFinal.text("Fecha: Agosto 2026", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
+
+      docFinal.setDrawColor(line);
+      docFinal.setLineWidth(0.8);
+      docFinal.line(W / 2, H - 25, W / 2 + 85, H - 25);
+
+      docFinal.addImage(firmaBase64, "PNG", W / 2 + 10, H - 58, 65, 32);
+      docFinal.setFont("times", "italic");
+      docFinal.text("Abg. Mario Aguinaga", W / 2 + 40, H - 15, { align: "center" });
+      docFinal.text("REPRESENTANTE LEGAL", W / 2 + 40, H - 7, { align: "center" });
+    }
+
+    docFinal.save(`Certificados_Todos_Agosto2026_${new Date().toISOString().split("T")[0]}.pdf`);
+  };
+
+  // DESCARGAR TODOS LOS CERTIFICADOS CON FECHA OCTUBRE 2025 EN UN SOLO PDF
+  const descargarTodosCertificados2025 = async () => {
+    const aprobados = datos.filter((r) => r.aprobado);
+    if (aprobados.length === 0) {
+      alert("No hay certificados para descargar");
+      return;
+    }
+
+    const toBase64 = (url) =>
+      fetch(url)
+        .then((r) => r.blob())
+        .then(
+          (blob) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            })
+        );
+
+    const [logoBase64, firmaBase64] = await Promise.all([
+      toBase64("/img/safemedic.png"),
+      toBase64("/img/firma.png"),
+    ]);
+
+    const docFinal = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    for (let index = 0; index < aprobados.length; index++) {
+      const persona = aprobados[index];
+      
+      if (index > 0) {
+        docFinal.addPage();
+      }
+
+      const W = docFinal.internal.pageSize.getWidth();
+      const H = docFinal.internal.pageSize.getHeight();
+
+      const azulFondo1 = "#0d2d3e";
+      const azulFondo2 = "#00b8c6";
+      const dorado = "#d4af37";
+      const line = "#146781";
+
+      docFinal.setFillColor(azulFondo2);
+      docFinal.triangle(0, H, W * 0.40, H, 0, H * 0.5, "F");
+
+      docFinal.setFillColor(azulFondo1);
+      docFinal.triangle(0, 0, W * 0.28, 0, W*0, H-60, "F");
+
+      docFinal.setFillColor(dorado);
+      docFinal.circle(W * 0.08, H * 0.10, W * 0.07, "F");
+
+      docFinal.addImage(logoBase64, "PNG", W - 85, 5, 75, 25);
+      docFinal.setFont("garamond", "bold");
+      docFinal.setFontSize(70);
+      docFinal.setTextColor("#d4af37");
+      docFinal.text("CERTIFICADO", W / 2 + 40, 65, { align: "center" });
+
+      docFinal.setFont("helvetica", "normal");
+      docFinal.setFontSize(16);
+      docFinal.setTextColor("#444444");
+      docFinal.text("Otorgado a", W / 2 + 40, 80, { align: "center" });
+
+      docFinal.setFont("times", "italic");
+      docFinal.setFontSize(35);
+      docFinal.setTextColor("#000000");
+      docFinal.text(persona.nombre_completo, W / 2 + 30, 95, { align: "center" });
+
+      docFinal.setFont("helvetica", "normal");
+      docFinal.setFontSize(14);
+      docFinal.setTextColor("#000000");
+      docFinal.text(
+        "Por haber participado con éxito en la capacitación que abarca los siguientes temas:",
+        W / 2 + 35,
+        105,
+        { align: "center" }
+      );
+      docFinal.setFontSize(12);
+      docFinal.text("• Derechos laborales de hombres y mujeres", W / 2 + 40, 115, { align: "center" });
+      docFinal.text("• Igualdad de género", W / 2 + 18, 125, { align: "center" });
+      docFinal.text("• Erradicación de la violencia y no discriminación", W / 2 + 44, 135, { align: "center" });
+      docFinal.text("• Otros relacionados para establecer el trabajo de igual valor", W / 2 + 55, 145, { align: "center" });
+
+      docFinal.setFontSize(15);
+      docFinal.setTextColor("#000000");
+      docFinal.text("Fecha: Octubre 2025", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
+
+      docFinal.setDrawColor(line);
+      docFinal.setLineWidth(0.8);
+      docFinal.line(W / 2, H - 25, W / 2 + 85, H - 25);
+
+      docFinal.addImage(firmaBase64, "PNG", W / 2 + 10, H - 58, 65, 32);
+      docFinal.setFont("times", "italic");
+      docFinal.text("Abg. Mario Aguinaga", W / 2 + 40, H - 15, { align: "center" });
+      docFinal.text("REPRESENTANTE LEGAL", W / 2 + 40, H - 7, { align: "center" });
+    }
+
+    docFinal.save(`Certificados_Todos_Octubre2025_${new Date().toISOString().split("T")[0]}.pdf`);
   };
 
   return (
@@ -167,10 +375,14 @@ export default function ResultadosPruebaTTHH() {
             <i className="bi bi-file-earmark-excel me-1"></i>
             Exportar Excel (aprobados)
           </button>
-          {/*<button className="btn btn-primary btn-sm" onClick={exportarTodosCertificados}>
+          <button className="btn btn-primary btn-sm" onClick={descargarTodosCertificados}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
-            Todos los certificados
-          </button>*/}
+            Descargar Todos (Agosto 2026)
+          </button>
+          <button className="btn btn-info btn-sm" onClick={descargarTodosCertificados2025}>
+            <i className="bi bi-file-earmark-pdf me-1"></i>
+            Descargar Todos (Octubre 2025)
+          </button>
           <button className="btn btn-outline-secondary btn-sm" onClick={cargarDatos}>
             <i className="bi bi-arrow-clockwise me-1"></i>
             Actualizar

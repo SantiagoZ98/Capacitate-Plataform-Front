@@ -55,6 +55,7 @@ export default function AdminProcesoHome() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [esTalentoHumano]);
 
+  
   const cargarCursosPendientes = async () => {
     try {
       const response = await fetch(`${API_URL}/api/cursos/pendientes`, {
@@ -98,7 +99,7 @@ export default function AdminProcesoHome() {
 
   const navItems = [
     { id: 'asistencia', label: 'Asistencia', icon: ClipboardList },
-    ...(esTalentoHumano ? [{ id: 'prueba-tthh', label: 'Prueba Final TTHH', icon: Award }] : []),
+    ...(esTalentoHumano ? [{ id: 'resultados-prueba-final', label: 'Resultados Prueba Final', icon: Award }] : []),
   ];
 
   const tabTitles = {
@@ -110,7 +111,7 @@ export default function AdminProcesoHome() {
     'panel-control': 'Panel de Control',
     reportes: 'Reportes',
     'documentos-conformidad': 'Documentos de Conformidad',
-    'prueba-tthh': 'Resultados Prueba Final – Talento Humano',
+    'resultados-prueba-final': 'Resultados Prueba Final',
   };
 
   const handleNavClick = (item) => {
@@ -160,8 +161,8 @@ export default function AdminProcesoHome() {
         return <AdminCursos />;
       case 'aprobacion':
         return <AprobacionCursos />;
-      case 'resultados':
-        return <ResultadosEvaluacionesProceso onClose={() => setActiveTab('inicio')} />;
+      case 'resultados-prueba-final':
+        return esTalentoHumano ? <ResultadosPruebaTTHH /> : null;
       case 'asistencia':
         return esTalentoHumano
           ? <AsistenciaPanelCursos4 onClose={() => setActiveTab('inicio')} />

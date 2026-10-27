@@ -131,7 +131,6 @@ export default function MiPerfil() {
 
   // Cursos estáticos TTHH como filas de tabla
   const cursosEstaticosConfig = [
-    {/* id: 'e1', curso_nombre: '1. Reglamento Interno de Trabajo - Código de Ética - Política de Responsabilidad Social', dbName: 'reglamentoInterno', esReglamento: true*/ },
     { id: 'e1', curso_nombre: '1. Derechos laborales de mujeres y hombres', dbName: 'derechos_laborales' },
     { id: 'e2', curso_nombre: '2. Igualdad de género', dbName: 'igualdad_genero' },
     { id: 'e3', curso_nombre: '3. Erradicación de violencia y no discriminación en un centro de trabajo', dbName: 'erradicacion_Violencia' },
@@ -140,13 +139,9 @@ export default function MiPerfil() {
 
   const cursosEstaticosItems = cursosEstaticosConfig.map(c => {
     const completado = completadosEstaticos.includes(c.dbName);
-    const puntaje = c.esReglamento
-      ? (completado ? 100 : null)
-      : (pruebaEstatica ? pruebaEstatica.mejor_puntaje : null);
-    const aprobado = c.esReglamento
-      ? (completado ? true : null)
-      : (pruebaEstatica ? pruebaEstatica.aprobado : null);
-    return { id: c.id, curso_nombre: c.curso_nombre, proceso: 'Talento Humano', mejor_puntaje: puntaje, evaluacion_aprobada: aprobado, es_estatico: true, excluir_de_stats: !!c.esReglamento };
+    const puntaje = pruebaEstatica ? pruebaEstatica.mejor_puntaje : null;
+    const aprobado = pruebaEstatica ? pruebaEstatica.aprobado : null;
+    return { id: c.id, curso_nombre: c.curso_nombre, proceso: 'Gerencia', mejor_puntaje: puntaje, evaluacion_aprobada: aprobado, es_estatico: true };
   });
 
   const todasCapacitaciones = [...capacitaciones, ...cursosEstaticosItems];
@@ -154,11 +149,9 @@ export default function MiPerfil() {
   // Lista única de procesos para el filtro
   const procesosUnicos = ['todos', ...new Set(todasCapacitaciones.map(c => c.proceso).filter(Boolean))];
 
-  // e1 (Reglamento) excluido de los contadores generales
-  const cursosContables = todasCapacitaciones.filter(c => !c.excluir_de_stats);
-  const total = cursosContables.length;
-  const completadas = cursosContables.filter(c => c.mejor_puntaje !== null && c.mejor_puntaje !== undefined).length;
-  const aprobadas = cursosContables.filter(c => c.evaluacion_aprobada).length;
+  const total = todasCapacitaciones.length;
+  const completadas = todasCapacitaciones.filter(c => c.mejor_puntaje !== null && c.mejor_puntaje !== undefined).length;
+  const aprobadas = todasCapacitaciones.filter(c => c.evaluacion_aprobada).length;
   const pendientes = total - completadas;
 
   // Filtros combinados
@@ -707,7 +700,7 @@ export default function MiPerfil() {
                   <thead className="table-d">
                     <tr>
                       <th>CURSO / PROGRAMA</th>
-                      <th>PROCESO</th>
+
                       <th>ESTADO</th>
                       <th>CALIFICACIÓN</th>
                       <th>CERTIFICADO</th>
@@ -744,7 +737,7 @@ export default function MiPerfil() {
                     {cursosAprobadosDinamicos.map(cap => (
                       <tr key={cap.id}>
                         <td><strong>{cap.curso_nombre}</strong></td>
-                        <td>{cap.proceso || '—'}</td>
+      
                         <td>
                           <span className="badge bg-success me-1">Completado</span>
                           <span className="badge bg-primary">Aprobado</span>
