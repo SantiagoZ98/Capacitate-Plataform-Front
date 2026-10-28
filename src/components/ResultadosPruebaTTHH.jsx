@@ -159,7 +159,7 @@ export default function ResultadosPruebaTTHH() {
 
   // GENERAR CERTIFICADO PDF individual (con fecha Agosto 2026)
   const generarCertificado = async (persona) => {
-    const doc = await generarCertificadoConFecha(persona, "Agosto 2026");
+    const doc = await generarCertificadoConFecha(persona, "Octubre 2026");
     doc.save(`Certificado_${persona.nombre_completo}.pdf`);
   };
 
@@ -248,7 +248,7 @@ export default function ResultadosPruebaTTHH() {
 
       docFinal.setFontSize(15);
       docFinal.setTextColor("#000000");
-      docFinal.text("Fecha: Agosto 2026", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Fecha: Octubre 2026", W / 2 + 105, 155, { align: "center" });
       docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
 
       docFinal.setDrawColor(line);
@@ -261,7 +261,7 @@ export default function ResultadosPruebaTTHH() {
       docFinal.text("REPRESENTANTE LEGAL", W / 2 + 40, H - 7, { align: "center" });
     }
 
-    docFinal.save(`Certificados_Todos_Agosto2026_${new Date().toISOString().split("T")[0]}.pdf`);
+    docFinal.save(`Certificados_Todos_Octubre2026_${new Date().toISOString().split("T")[0]}.pdf`);
   };
 
   // DESCARGAR TODOS LOS CERTIFICADOS CON FECHA OCTUBRE 2025 EN UN SOLO PDF
@@ -349,7 +349,7 @@ export default function ResultadosPruebaTTHH() {
 
       docFinal.setFontSize(15);
       docFinal.setTextColor("#000000");
-      docFinal.text("Fecha: Octubre 2025", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Fecha: Agosto 2025", W / 2 + 105, 155, { align: "center" });
       docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
 
       docFinal.setDrawColor(line);
@@ -378,11 +378,11 @@ export default function ResultadosPruebaTTHH() {
           </button>
           <button className="btn-anio-2026" onClick={descargarTodosCertificados}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
-            Descargar Todos (Agosto 2026)
+            Descargar Todos (2026)
           </button>
           <button className="btn-anio-2025" onClick={descargarTodosCertificados2025}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
-            Descargar Todos (Octubre 2025)
+            Descargar Todos (2025)
           </button>
           <button className="btn btn-outline-secondary btn-sm" onClick={cargarDatos}>
             <i className="bi bi-arrow-clockwise me-1"></i>

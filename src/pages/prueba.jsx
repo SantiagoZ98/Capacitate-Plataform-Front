@@ -31,8 +31,8 @@ export default function Prueba() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
-            nombre: usuario,
-            proceso: "talento_humano"
+            nombre: usuario
+            // NO enviar proceso hardcodeado - el backend lo obtiene dinámicamente
           }),
         });
 
@@ -42,7 +42,7 @@ export default function Prueba() {
         console.log("🔍 Datos recibidos del backend:", data);
 
         // Verificar ambos casos posibles
-        if (data.pruebaAprobada === true || data.prueba_aprobada === true) {
+        if (data.prueba_aprobada === true || data.pruebaAprobada === true) {
           localStorage.setItem("pruebaAprobada", "true");
           setYaAprobado(true);
           console.log("✅ Usuario ya tenía prueba aprobada en BD");
