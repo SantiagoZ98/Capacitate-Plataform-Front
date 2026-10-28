@@ -15,14 +15,24 @@ import '../styles/components/AsistenciaPanel.css';
 export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/asistencia/proceso' }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem('admin_token');
+  const adminUser = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
 
   const [asistencia, setAsistencia] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [filtroCurso, setFiltroCurso] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('');
   const [cursosUnicos, setCursosUnicos] = useState([]);
+  const [noAutorizado, setNoAutorizado] = useState(false);
 
   useEffect(() => {
+    // Validar que sea administrador
+    if (adminUser.role !== 'administrador') {
+      console.warn('❌ Acceso denegado: solo administradores pueden ver asistencia');
+      setNoAutorizado(true);
+      setCargando(false);
+      return;
+    }
+    
     cargarAsistencia();
     const intervalo = setInterval(cargarAsistencia, 30000);
     return () => clearInterval(intervalo);
@@ -400,6 +410,19 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   };
 
   // ── Render ────────────────────────────────────────────────────
+  if (noAutorizado) {
+    return (
+      <div className="asistencia-panel">
+        <div className="alert alert-danger" role="alert">
+          <h4 className="alert-heading">❌ Acceso Denegado</h4>
+          <p>Solo los administradores pueden acceder a la sección de asistencia.</p>
+          <hr />
+          <p className="mb-0">Rol actual: <strong>{adminUser.role || 'No definido'}</strong></p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="asistencia-panel">
 
