@@ -163,7 +163,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
     // Nombre del admin desde localStorage
     const adminUser   = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
-    const responsable = adminUser.nombre || 'Mario Aguinaga';
+    const responsable = 'Mario Aguinaga';
 
     
 
@@ -453,7 +453,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
     // Nombre del admin desde localStorage
     const adminUser   = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
-    const responsable = adminUser.nombre || 'Mario Aguinaga';
+    const responsable = 'Mario Aguinaga';
 
     // FECHA FIJA 2026
     const fechaInicioCurso2026 = '28/10/2026';
