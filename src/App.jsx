@@ -324,7 +324,7 @@ function App() {
 
           {/* Prueba final protegida */}
           <Route 
-            path="/pruebafinal" 
+            path="/courses/capacitacion/pruebafinal" 
             element={
               <ProtectedUserRoute>
                 <Prueba />

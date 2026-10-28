@@ -269,41 +269,12 @@ export default function CoursesTTHH() {
           })}
         </div>
 
-        {/* Resumen de progreso 
-        <div className="card mb-4">
-          <div className="card-body">
-            <h5 className="card-title">Resumen de progreso</h5>
-            <p className="mb-2">Cursos completados: <strong>{completadosRequeridos} de 4</strong></p>
-            <div className="progress mb-3">
-              <div
-                className="progress-bar bg-success"
-                role="progressbar"
-                style={{ width: `${(completadosRequeridos / 4) * 100}%` }}
-                aria-valuenow={completadosRequeridos}
-                aria-valuemin="0"
-                aria-valuemax="4"
-              >
-                {Math.round((completadosRequeridos / 4) * 100)}%
-              </div>
-            </div>
-            {listo4Cursos ? (
-              <div className="alert alert-success mb-0">
-                ✅ ¡Has completado todos los cursos requeridos! Ya puedes tomar la prueba final.
-              </div>
-            ) : (
-              <div className="alert alert-info mb-0">
-                📚 Completa {4 - completadosRequeridos} curso(s) más para habilitar la prueba final.
-              </div>
-            )}
-          </div>
-        </div>
-*/}
         {/* Botón para acceder a la prueba */}
         {listo4Cursos && (
           <div className="text-center">
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => navigate('/courses/pruebafinal')}
+              onClick={() => navigate('/courses/capacitacion/pruebafinal')}
             >
               <i className="bi bi-pencil-square me-2"></i>
               Ir a la Prueba Final
