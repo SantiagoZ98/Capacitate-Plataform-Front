@@ -26,8 +26,8 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
   useEffect(() => {
     // Validar que sea administrador
-    if (adminUser.role !== 'administrador') {
-      console.warn('❌ Acceso denegado: solo administradores pueden ver asistencia');
+    if (adminUser.proceso_name !== 'Administrador') {
+      console.warn(`❌ Acceso denegado: solo Administradores pueden ver asistencia. Proceso actual: ${adminUser.proceso_name || 'No definido'}`);
       setNoAutorizado(true);
       setCargando(false);
       return;
@@ -417,7 +417,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
           <h4 className="alert-heading">❌ Acceso Denegado</h4>
           <p>Solo los administradores pueden acceder a la sección de asistencia.</p>
           <hr />
-          <p className="mb-0">Rol actual: <strong>{adminUser.role || 'No definido'}</strong></p>
+          <p className="mb-0">Proceso actual: <strong>{adminUser.proceso_name || 'No definido'}</strong></p>
         </div>
       </div>
     );
