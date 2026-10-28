@@ -170,13 +170,13 @@ export default function Prueba() {
     },
     {
       id:8,
-      text: "Selecciona: ¿Cuáles consideras que son los canales de denuncias ante algún falta de respeto, discriminación o No Inclusión?",
+      text: "Selecciona: ¿Qué es lo primero que debes hacer si sufres acoso o violencia en el trabajo?",
       options:[
-        "El portero - El señor que recoge la basura.",
-        "La página oficial de la empresa en Facebook - Un mensaje de texto por TikTok.",
-        "Linea telefónica confidencial - Oficina de Talento Humano."
+        "Confrontar agresivamente al agresor.",
+        "Documentar los hechos y reportarlos.",
+        "Renunciar de inmediato sin decir nada."
       ],
-      correct: 2
+      correct: 1
     },
     {
       id:9,
