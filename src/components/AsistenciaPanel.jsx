@@ -304,7 +304,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
       r.usuario_nombre,
       r.cedula_identidad || '—',
       r.usuario_cargo,
-      r.estado || '—',
+      r.estado ? r.estado.charAt(0).toUpperCase() + r.estado.slice(1) : '—',
     ]);
 
     autoTable(doc, {
