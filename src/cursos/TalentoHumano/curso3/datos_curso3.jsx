@@ -45,14 +45,6 @@ export const cursoErradicacionViolencia = {
     },
     {
         id: 305,
-        titulo: "Canal de Denuncias - Protocolos",
-        tipo: "imagen",
-        url: "https://ortewujmiggxjglhdmie.supabase.co/storage/v1/object/public/modulos/1/1204.jpg",
-        completado: false,
-        descripcion: "Revisa el contenido de la siguiente infografía."
-    },
-    {
-        id: 306,
         titulo: "PODCAST: Violencia en el trabajo: ¿Cómo Detectarla y qué hacer al respecto?",
         tipo: "video",
         url: "https://www.youtube.com/watch?v=6B8d8SSzasU",
@@ -62,7 +54,7 @@ export const cursoErradicacionViolencia = {
         descripcion: "Revisa el siguiente podcast informativo."
     },
     {
-        id: 307,
+        id: 306,
         titulo: "¿Cómo erradicar la violencia y discriminación en una empresa o centros de trabajo?",
         tipo: "pdf",
         url: "/pdf/Violencia_Discriminacion_en_el_trabajo.pdf",
@@ -70,7 +62,7 @@ export const cursoErradicacionViolencia = {
         descripcion: "Lee el siguiente documento para entender la relación entre igualdad de género."
     },
     {
-        id: 308,
+        id: 307,
         titulo: "Cómo prevenir la Violencia Laboral",
         tipo: "video",
         url: "https://www.youtube.com/watch?v=a2MS3tjmd8g&t=22s",
@@ -78,7 +70,7 @@ export const cursoErradicacionViolencia = {
         descripcion: "En este video informativo aprenderás cómo prevenir la violencia laboral."
     },
     {
-      id: 309,
+      id: 308,
         titulo: "La violencia en el trabajo, Discriminación Laboral",
         tipo: "video",
         url: "https://www.youtube.com/watch?v=X-zjT2snWTE",
