@@ -269,7 +269,7 @@ export default function CoursesTTHH() {
           })}
         </div>
 
-        {/* Resumen de progreso */}
+        {/* Resumen de progreso 
         <div className="card mb-4">
           <div className="card-body">
             <h5 className="card-title">Resumen de progreso</h5>
@@ -297,13 +297,13 @@ export default function CoursesTTHH() {
             )}
           </div>
         </div>
-
+*/}
         {/* Botón para acceder a la prueba */}
         {listo4Cursos && (
           <div className="text-center">
             <button
               className="btn btn-primary btn-lg"
-              onClick={() => navigate('/courses/pruebatthh')}
+              onClick={() => navigate('/courses/pruebafinal')}
             >
               <i className="bi bi-pencil-square me-2"></i>
               Ir a la Prueba Final

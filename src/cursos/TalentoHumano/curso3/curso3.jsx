@@ -168,7 +168,7 @@ export default function Curso3({ curso }) {
       useEffect(() => {
         const finalizarCurso = async () => {
           if (progreso === 100 && !cargando && !cursoMarcadoCompletado) {
-            console.log("¡Curso completado al 100%! Procesando...");
+            console.log("🎯 ¡Curso completado al 100%! Procesando...");
             setMostrarProcesando(true);
             
             const procesandoTimeout = setTimeout(() => {
@@ -176,29 +176,36 @@ export default function Curso3({ curso }) {
             console.log("⏰ Timeout: Ocultando 'Procesando finalización...'");
             }, 1000);
   
-            // Primero marcar el curso como completado en la BD
+            console.log("📝 Llamando a marcarCursoCompletadoEnBD()...");
             const cursoMarcado = await marcarCursoCompletadoEnBD();
+            console.log(`✅ Resultado de marcarCursoCompletadoEnBD: ${cursoMarcado}`);
   
             clearTimeout(procesandoTimeout);
             
             if (cursoMarcado) {
+              console.log("✅ Curso marcado exitosamente, procediendo a redirigir...");
+              
               // Solo sumar progreso general si es la primera vez que se completa
               if (!courseCompletedFromDB) {
+                console.log("📊 Sumando progreso general...");
                 await sumarProgresoGeneral();
                 setCourseCompletedFromDB(true);
               }
               
               // Redirigir después de un breve retraso
+              console.log("🚀 Redirigiendo a /courses/capacitacion...");
               setTimeout(() => {
-                navigate("/courses/tthh", { 
+                navigate("/courses/capacitacion", { 
                   replace: true, 
                   state: { 
                     refrescar: true,
                     cursoCompletado: nombreCursoBD,
-                    mensaje: `¡Felicidades! Has completado el curso "${curso.nombre}"`
+                    mensaje: `🎉 ¡Felicidades! Has completado el curso "${curso.nombre}"`
                   } 
                 });
               }, 1000);
+            } else {
+              console.error("❌ No se pudo marcar el curso como completado");
             }
           }
         };

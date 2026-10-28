@@ -276,7 +276,7 @@ function App() {
           <Route path="/soporte" element={<ProtectedUserRoute><Soporte /></ProtectedUserRoute>} />
           <Route path="/mi-perfil" element={<ProtectedUserRoute><MiPerfil /></ProtectedUserRoute>} />
           <Route 
-            path="/courses/tthh" 
+            path="/courses/capacitacion" 
             element={
               <ProtectedUserRoute>
                 <CoursesTTHH />
@@ -324,7 +324,7 @@ function App() {
 
           {/* Prueba final protegida */}
           <Route 
-            path="/prueba" 
+            path="/pruebafinal" 
             element={
               <ProtectedUserRoute>
                 <Prueba />
