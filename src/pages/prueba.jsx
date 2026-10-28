@@ -324,7 +324,7 @@ export default function Prueba() {
 
           <div className="text-center mt-4">
             <button 
-              onClick={() => navigate("/courses/tthh")} 
+              onClick={() => navigate("/courses/capacitacion")} 
               className="btn btn-primary"
             >
               Volver a los cursos

@@ -707,7 +707,7 @@ export default function MiPerfil() {
                     {puedeDescargarTTHH && (
                       <tr>
                         <td><strong>Programa: Igualdad, No Discriminación y Erradicación de Violencia – Talento Humano</strong></td>
-                        <td>Talento Humano</td>
+
                         <td>
                           <span className="badge bg-success me-1">Completado</span>
                           <span className="badge bg-primary">Aprobado</span>
