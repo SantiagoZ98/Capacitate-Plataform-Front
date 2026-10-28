@@ -20,7 +20,7 @@ export default function Home() {
 
         <button
           className="inicio-btn"
-          onClick={() => window.location.href = "/courses/tthh"}
+          onClick={() => window.location.href = "/courses/capacitacion"}
         >
           Comenzar Capacitación
         </button>
