@@ -165,6 +165,8 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     const adminUser   = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
     const responsable = adminUser.nombre || 'Mario Aguinaga';
 
+    
+
     // FECHA FIJA 2025
     const fechaInicioCurso = '18/08/2025';
 
@@ -453,6 +455,8 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     const adminUser   = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
     const responsable = adminUser.nombre || 'Mario Aguinaga';
 
+    // FECHA FIJA 2026
+    const fechaInicioCurso2026 = '28/10/2026';
 
     const doc   = new jsPDF('portrait', 'mm', 'a4');
     const pageW = doc.internal.pageSize.getWidth();   // 210mm
@@ -543,7 +547,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     const respValW  = useW - etqW * 2 - mitad;
 
     celda(mL,        y, etqW,    rowH, 'FECHA (dd/mm/aa):',        true, FONDO_SECUNDARIO);
-    celda(xFechaVal, y, mitad,   rowH, fechaInicioCurso);
+    celda(xFechaVal, y, mitad,   rowH, fechaInicioCurso2026);
   
     celda(xRespEtq,  y, etqW,    rowH, 'DURACIÓN:',  true, FONDO_SECUNDARIO);
     celda(xRespVal,  y, respValW, rowH, duracion);
