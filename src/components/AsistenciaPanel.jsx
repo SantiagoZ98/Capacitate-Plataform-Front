@@ -213,13 +213,6 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     const ancho = 40
     const alto = 12
 
-    {/*
-    // Celda para la imagen
-    doc.setDrawColor(...BORDE);
-    doc.setLineWidth(0.3);
-    doc.rect(fotoX, fotoY, ancho, alto, 'S');
-    */}
-
     if (logoDataUrl) {
       doc.addImage(logoDataUrl, 'PNG', fotoX, fotoY, ancho, alto);
     }
@@ -234,38 +227,13 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     // Línea izquierda
     doc.line(tituloX -10 , tituloY , tituloX - 10, tituloY + 25);
 
-    // Línea derecha
-    //doc.line(tituloX + tituloW + 10 , tituloY , tituloX + tituloW + 10, tituloY + 25);
     // Texto del título
     doc.setFontSize(9.5);
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
     doc.text('REGISTRO DE ASISTENCIA Y PARTICIPACIÓN', tituloX + (tituloW / 2) + 20 ,  tituloY + (tituloAlto / 2) + 6, { align: 'center' });
 
-    
-    /* Texto de la derecha
-    const textoDerecha = [
-      'Código: RG-GTH-04', 
-      '',
-      'Fecha: 27-08-2026', 
-      '',
-      'Versión: 10'
-    ];*/
-
-  // Texto dentro de la celda
-  doc.setFontSize(9.5);
-  doc.setTextColor(0, 0, 0);
-  doc.setFont('helvetica', 'bold');
-    
-  //const textX = mL + useW - 45; // Ajusta la posición horizontal según tus necesidades
-  //const textY = y + 6;
-  //const lineHeight = 3;
-
-  /*textoDerecha.forEach((linea, index) => {
-    doc.text(linea, textX, textY + index * lineHeight, { align: 'left' });
-  });*/
-
-  y += tituloH;
+    y += tituloH;
 
     // ── Dimensiones de columnas ────────────────────────────────
     const etqW  = 35;                       // columna etiqueta
@@ -326,7 +294,6 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
       r.usuario_nombre,
       r.cedula_identidad || '—',
       r.usuario_cargo,
-      //r.inicio_en ? formatearFecha(r.inicio_en) : '—',
       r.estado || '—',
     ]);
 
@@ -357,14 +324,10 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
         2: { cellWidth: 30,  halign: 'center' },
         3: { cellWidth: 48,  halign: 'center'   },
         4: { cellWidth: 35,  halign: 'center' },
-        //5: { cellWidth: 25,  halign: 'center' },
       },
     });
 
-    // Obtener la posicion Y y despues la Tabla
-    
-
-    // ── Pie de página ──────────────────────────────────────────
+    // Obtener la posicion Y despues de la Tabla
     const finalY = doc.lastAutoTable.finalY + 10;
 
     const espacioDisponible = pageH - finalY - 15; // 20mm de margen inferior
@@ -388,8 +351,6 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     const x2 = x1 + ancho1 + espacioEntreCuadros;
     const x3 = x2 + ancho2 + espacioEntreCuadros;
 
-    //const ancho4 = useW - (x3 - mL); // Ancho total de los tres cuadros
-
     const dibujarCuadro = (x, y, w, h, textoSuperior, textoInferior = '') => {
       doc.setDrawColor(...BORDE);
       doc.setLineWidth(0.3);
@@ -401,12 +362,6 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
       doc.setFont('helvetica', 'normal');
       const lineasSuperior = doc.splitTextToSize(textoSuperior, w - 6);
       doc.text(lineasSuperior, x + (w / 2), y + 7, { align: 'center' });
-      
-
-      // LINEA SEPARADORA 
-      //doc.setDrawColor(200, 200, 200);
-      //doc.setLineWidth(0.1);
-      //doc.line(x + 3, y + 14, x + w - 4, y + 14);
 
       if(textoInferior) {
         doc.setFontSize(9);
@@ -419,7 +374,10 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     
     dibujarCuadro(x1, yCuadros, ancho1, cuadroAlto, 'PLATAFORMA VIRTUAL', '');
 
-    dibujarCuadro(x2, yCuadros, ancho2, cuadroAlto, 'Gerencia', 'PROCESO RESPONSABLE');
+    // Obtener el proceso del usuario actual para mostrar en el cuadro del medio
+    const nombreProceso = adminUser.proceso_name || 'PROCESO';
+
+    dibujarCuadro(x2, yCuadros, ancho2, cuadroAlto, nombreProceso, 'PROCESO RESPONSABLE');
 
     dibujarCuadro(x3 , yCuadros, ancho3, cuadroAlto, '', 'REPRESENTANTE LEGAL');
     if (firmaDataUrl) {
@@ -427,20 +385,15 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     }
 
     y = finalY + cuadroAlto + 8;
-    {/*
+    
+    // Agregar número de página al final
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      const fechaReporte = new Date().toLocaleString('es-EC', {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit',
-      });
-      doc.text(`Generado: ${fechaReporte}`, mL, pageH - 6);
       doc.text(`Página ${i} de ${totalPages}`, pageW - mR, pageH - 6, { align: 'right' });
     }
-      */}
 
     const nombreArchivo = `asistencia_${nombreCurso.replace(/\s+/g, '_')}.pdf`;
     doc.save(nombreArchivo);
