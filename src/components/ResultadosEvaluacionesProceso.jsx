@@ -26,9 +26,18 @@ export default function ResultadosEvaluacionesProceso() {
   const [reporteData, setReporteData] = useState(null);
   const [cargandoReporte, setCargandoReporte] = useState(false);
   const [vistaActiva, setVistaActiva] = useState('evaluaciones'); // 'evaluaciones' | 'reporte'
+  const [noAutorizado, setNoAutorizado] = useState(false);
   const anioActual = new Date().getFullYear(); // todos | bloqueados | aprobados | reprobados
 
   useEffect(() => {
+    // Validar que sea administrador
+    if (adminUser.proceso_name !== 'Administrador') {
+      console.warn(`❌ Acceso denegado: solo Administradores pueden ver resultados de evaluaciones. Proceso actual: ${adminUser.proceso_name || 'No definido'}`);
+      setNoAutorizado(true);
+      setCargando(false);
+      return;
+    }
+    
     cargarResultados();
     const intervalo = setInterval(cargarResultados, 30000);
     return () => clearInterval(intervalo);
@@ -163,6 +172,19 @@ export default function ResultadosEvaluacionesProceso() {
   const totalBloqueados = registrosActuales.filter(r => r.bloqueado).length;
 
   // ── Render ────────────────────────────────────────────────────
+  if (noAutorizado) {
+    return (
+      <div className="res-eval-container">
+        <div className="alert alert-danger" role="alert">
+          <h4 className="alert-heading">❌ Acceso Denegado</h4>
+          <p>Solo los administradores pueden acceder a los resultados de evaluaciones.</p>
+          <hr />
+          <p className="mb-0">Proceso actual: <strong>{adminUser.proceso_name || 'No definido'}</strong></p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="res-eval-container">
 

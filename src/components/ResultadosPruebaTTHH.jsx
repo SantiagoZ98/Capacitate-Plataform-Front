@@ -8,12 +8,22 @@ import '../styles/components/resultadosPruebaTTHH.css';
 export default function ResultadosPruebaTTHH() {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("admin_token");
+  const adminUser = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
 
   const [datos, setDatos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [filtro, setFiltro] = useState("todos"); // todos | aprobados | reprobados
+  const [noAutorizado, setNoAutorizado] = useState(false);
 
   useEffect(() => {
+    // Validar que sea administrador
+    if (adminUser.proceso_name !== 'Administrador') {
+      console.warn(`❌ Acceso denegado: solo Administradores pueden ver resultados de pruebas. Proceso actual: ${adminUser.proceso_name || 'No definido'}`);
+      setNoAutorizado(true);
+      setCargando(false);
+      return;
+    }
+    
     cargarDatos();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -364,6 +374,20 @@ export default function ResultadosPruebaTTHH() {
 
     docFinal.save(`Certificados_Todos_Octubre2025_${new Date().toISOString().split("T")[0]}.pdf`);
   };
+
+  // ── Render ────────────────────────────────────────────────────
+  if (noAutorizado) {
+    return (
+      <div className="p-3">
+        <div className="alert alert-danger" role="alert">
+          <h4 className="alert-heading">❌ Acceso Denegado</h4>
+          <p>Solo los administradores pueden acceder a los resultados de pruebas.</p>
+          <hr />
+          <p className="mb-0">Proceso actual: <strong>{adminUser.proceso_name || 'No definido'}</strong></p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-3">
