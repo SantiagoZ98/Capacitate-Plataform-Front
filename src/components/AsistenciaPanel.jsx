@@ -172,7 +172,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
     // Nombre del admin desde localStorage
     const adminUser   = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
-    const responsable = adminUser.nombre || '—';
+    const responsable = adminUser.nombre || 'Mario Aguinaga';
 
 
     const doc   = new jsPDF('portrait', 'mm', 'a4');
