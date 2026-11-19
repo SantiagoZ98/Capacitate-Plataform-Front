@@ -87,10 +87,17 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   };
 
   // ── Filtros ───────────────────────────────────────────────────
+  // Lista de personas excluidas del registro de asistencia 2026
+  const EXCLUIDOS_2026 = [
+    { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
+  ];
+
   const registrosFiltrados = asistencia.filter(r => {
     const coincideCurso  = !filtroCurso || String(r.curso_id) === filtroCurso;
     const coincideEstado = filtroEstado === '' || r.estado === filtroEstado;
-    return coincideCurso && coincideEstado;
+    // Excluir personas específicas del año 2026
+    const noExcluido = !EXCLUIDOS_2026.some(e => e.cedula === r.cedula_identidad);
+    return coincideCurso && coincideEstado && noExcluido;
   });
 
   // ── Exportar a CSV ────────────────────────────────────────────
