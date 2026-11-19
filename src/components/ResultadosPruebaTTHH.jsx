@@ -175,7 +175,7 @@ export default function ResultadosPruebaTTHH() {
 
   // DESCARGAR TODOS LOS CERTIFICADOS EN UN SOLO PDF
   const descargarTodosCertificados = async () => {
-    const aprobados = datos.filter((r) => r.aprobado);
+    const aprobados = datos.filter((r) => r.aprobado && String(r.cedula).trim() !== "1726681941");
     if (aprobados.length === 0) {
       alert("No hay certificados para descargar");
       return;
