@@ -7,10 +7,6 @@ import '../styles/components/AsistenciaPanel.css';
 /**
  * AsistenciaPanel
  * Tabla de asistencia para el admin de proceso.
- * Muestra nombre, cargo y fechas de asistencia por curso.
- *
- * Props:
- *   onClose — callback para volver al inicio
  */
 export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/asistencia/proceso' }) {
   const API_URL = import.meta.env.VITE_API_URL;
