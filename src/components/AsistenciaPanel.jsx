@@ -103,13 +103,18 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     }
   };
 
+  // Filtro SIN exclusión (para usar en PDF 2025 y tabla general)
   const registrosFiltrados = asistencia.filter(r => {
     const coincideCurso  = !filtroCurso || String(r.curso_id) === filtroCurso;
     const coincideEstado = filtroEstado === '' || r.estado === filtroEstado;
-    // Excluir personas específicas SOLO para el año 2026
+    return coincideCurso && coincideEstado;
+  });
+
+  // Filtro CON exclusión para 2026 (para PDF 2026 solamente)
+  const registrosFiltrados2026 = registrosFiltrados.filter(r => {
     const anioCurso = extraerAño(r.inicio_en);
     const esExcluido = anioCurso === 2026 && EXCLUIDOS_2026.some(e => e.cedula === r.cedula_identidad);
-    return coincideCurso && coincideEstado && !esExcluido;
+    return !esExcluido;
   });
 
   // ── Exportar a CSV ────────────────────────────────────────────
@@ -601,7 +606,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
     // ── Tabla de asistencia ────────────────────────────────────
     const headers = ['N°', 'APELLIDOS Y NOMBRES', 'CÉDULA', 'CARGO', 'ESTADO / FIRMA'];
-    const rows = registrosFiltrados.map((r, idx) => [
+    const rows = registrosFiltrados2026.map((r, idx) => [
       idx + 1,
       r.usuario_nombre,
       r.cedula_identidad || '—',
