@@ -92,12 +92,24 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
   ];
 
+  // Función auxiliar para extraer el año de una fecha
+  const extraerAño = (fechaStr) => {
+    if (!fechaStr) return null;
+    try {
+      const d = new Date(fechaStr);
+      return d.getFullYear();
+    } catch {
+      return null;
+    }
+  };
+
   const registrosFiltrados = asistencia.filter(r => {
     const coincideCurso  = !filtroCurso || String(r.curso_id) === filtroCurso;
     const coincideEstado = filtroEstado === '' || r.estado === filtroEstado;
-    // Excluir personas específicas del año 2026
-    const noExcluido = !EXCLUIDOS_2026.some(e => e.cedula === r.cedula_identidad);
-    return coincideCurso && coincideEstado && noExcluido;
+    // Excluir personas específicas SOLO para el año 2026
+    const anioCurso = extraerAño(r.inicio_en);
+    const esExcluido = anioCurso === 2026 && EXCLUIDOS_2026.some(e => e.cedula === r.cedula_identidad);
+    return coincideCurso && coincideEstado && !esExcluido;
   });
 
   // ── Exportar a CSV ────────────────────────────────────────────
@@ -764,7 +776,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
             disabled={!pdfActivo}
             style={{ opacity: pdfActivo ? 1 : 0.45, cursor: pdfActivo ? 'pointer' : 'not-allowed' }}
           >
-            <Download size={15} className="me-1" /> PDF
+            <Download size={15} className="me-1" /> PDF 2026
           </button>
 
           <button
