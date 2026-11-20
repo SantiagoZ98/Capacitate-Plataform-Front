@@ -276,7 +276,7 @@ export default function ResultadosPruebaTTHH() {
 
   // DESCARGAR TODOS LOS CERTIFICADOS CON FECHA OCTUBRE 2025 EN UN SOLO PDF
   const descargarTodosCertificados2025 = async () => {
-    const aprobados = datos.filter((r) => r.aprobado);
+    const aprobados = datos.filter((r) => r.aprobado && String(r.cedula).trim() !== "1722582309");
     if (aprobados.length === 0) {
       alert("No hay certificados para descargar");
       return;

@@ -87,6 +87,9 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   const EXCLUIDOS_2026 = [
     { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
   ];
+  const EXCLUIDOS_2025 = [
+    { cedula: '1722582309', nombre: 'Salazar Ulloa Cristian Alexander' }
+  ];
 
   // Función auxiliar para extraer el año de una fecha
   const extraerAño = (fechaStr) => {
@@ -109,7 +112,16 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   // Filtro CON exclusión para 2026 (para PDF 2026 solamente)
   const registrosFiltrados2026 = registrosFiltrados.filter(r => {
     const anioCurso = extraerAño(r.inicio_en);
-    const esExcluido = anioCurso === 2026 && EXCLUIDOS_2026.some(e => e.cedula === r.cedula_identidad);
+    const cedula = String(r.cedula_identidad ?? '').trim();
+    const esExcluido = anioCurso === 2026 && EXCLUIDOS_2026.some(e => e.cedula === cedula);
+    return !esExcluido;
+  });
+
+  // Filtro CON exclusión para 2025 (para PDF 2025 solamente)
+  const registrosFiltrados2025 = registrosFiltrados.filter(r => {
+    const anioCurso = extraerAño(r.inicio_en);
+    const cedula = String(r.cedula_identidad ?? '').trim();
+    const esExcluido = anioCurso === 2025 && EXCLUIDOS_2025.some(e => e.cedula === cedula);
     return !esExcluido;
   });
 
@@ -313,7 +325,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
     // ── Tabla de asistencia ────────────────────────────────────
     const headers = ['N°', 'APELLIDOS Y NOMBRES', 'CÉDULA', 'CARGO', 'ESTADO / FIRMA'];
-    const rows = registrosFiltrados.map((r, idx) => [
+    const rows = registrosFiltrados2025.map((r, idx) => [
       idx + 1,
       r.usuario_nombre,
       r.cedula_identidad || '—',
