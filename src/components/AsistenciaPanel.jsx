@@ -153,6 +153,12 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   // ── PDF solo activo cuando hay curso seleccionado + estado completado ────
   const pdfActivo = filtroCurso !== '' && filtroEstado === 'completado';
 
+  // Datos de la persona para PDF Independiente
+  const PERSONA_INDEPENDIENTE = {
+    cedula: '0201682440',
+    nombre: 'Estrada Pendolema Carmen Leonor'
+  };
+
   // ── Exportar a PDF 2025 ──────────────────────────────────────────
   const exportarPDF2025 = async () => {
     if (!pdfActivo) return;
@@ -723,6 +729,236 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     doc.save(nombreArchivo);
   };
 
+  // ── Exportar PDF Independiente (Solo una persona, 2025 + 2026) ────
+  const exportarPDFIndependiente = async () => {
+    // Pre-cargar logo como base64
+    let logoDataUrl = null;
+    try {
+      const resp = await fetch('/img/safemedic.png');
+      const blob = await resp.blob();
+      logoDataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn('No se pudo cargar el logo:', e);
+    }
+
+    let firmaDataUrl = null;
+    try {
+      const resp = await fetch('/img/firma.png');
+      const blob = await resp.blob();
+      firmaDataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn('No se pudo cargar la firma:', e);
+    }
+
+    // Buscar registros de la persona específica (2025 y 2026, sin exclusiones)
+    const registrosPersona = asistencia.filter(r => {
+      const cedula = String(r.cedula_identidad ?? '').trim();
+      return cedula === PERSONA_INDEPENDIENTE.cedula;
+    });
+
+    if (registrosPersona.length === 0) {
+      alert('No se encontraron registros para la persona especificada.');
+      return;
+    }
+
+    // Separar por año
+    const registros2025 = registrosPersona.filter(r => extraerAño(r.inicio_en) === 2025);
+    const registros2026 = registrosPersona.filter(r => extraerAño(r.inicio_en) === 2026);
+
+    // Crear documento PDF
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const mL = 14;
+    const mR = 14;
+    const useW = pageW - mL - mR;
+
+    const FONDO_PRINCIPAL = [255, 255, 255];
+    const FONDO_SECUNDARIO = [255, 255, 255];
+    const BORDE = [0, 0, 0];
+    const TEXTO_OSCURO = [0, 0, 0];
+
+    const celda = (x, y, w, h, texto, negrita = false, fondo = null) => {
+      if (fondo) {
+        doc.setFillColor(...fondo);
+        doc.rect(x, y, w, h, 'F');
+      }
+      doc.setDrawColor(...BORDE);
+      doc.setLineWidth(0.3);
+      doc.rect(x, y, w, h, 'S');
+      doc.setFontSize(9);
+      doc.setTextColor(...TEXTO_OSCURO);
+      doc.setFont('helvetica', negrita ? 'bold' : 'normal');
+      const lineas = doc.splitTextToSize(texto, w - 4);
+      doc.text(lineas, x + 3, y + 6);
+    };
+
+    const dibujarCuadro = (x, y, w, h, textoSuperior, textoInferior = '') => {
+      doc.setDrawColor(...BORDE);
+      doc.setLineWidth(0.3);
+      doc.rect(x, y - 3, w, h, 'S');
+
+      doc.setFontSize(9);
+      doc.setTextColor(...TEXTO_OSCURO);
+      doc.setFont('helvetica', 'normal');
+      const lineasSuperior = doc.splitTextToSize(textoSuperior, w - 6);
+      doc.text(lineasSuperior, x + (w / 2), y + 7, { align: 'center' });
+
+      if (textoInferior) {
+        doc.setFontSize(9);
+        doc.setTextColor(...TEXTO_OSCURO);
+        doc.setFont('helvetica', 'bold');
+        const lineasInferior = doc.splitTextToSize(textoInferior, w - 6);
+        doc.text(lineasInferior, x + (w / 2), y + 18, { align: 'center' });
+      }
+    };
+
+    const adminUser = JSON.parse(localStorage.getItem('admin_proceso_user') || '{}');
+    const responsable = 'Verónica Navas';
+    const etqW = 35;
+    const rowH = 8;
+    const valW = useW - etqW;
+
+    // Función auxiliar para generar una sección de PDF
+    const generarSeccionPDF = (registros, año, esFirstPage = false) => {
+      let y = esFirstPage ? mL : mL + 10;
+
+      if (!esFirstPage) {
+        doc.addPage();
+      }
+
+      // ── Título ─────────────────────────────────────────────
+      const tituloH = 25;
+
+      // Fondo de la caja
+      doc.setFillColor(...FONDO_PRINCIPAL);
+      doc.rect(mL, y, useW, tituloH, 'F');
+
+      // Borde de la caja
+      doc.setDrawColor(...BORDE);
+      doc.setLineWidth(0.3);
+      doc.rect(mL, y, useW, tituloH, 'S');
+
+      // Título centrado (horizontal y verticalmente)
+      doc.setFontSize(9.5);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text(
+        'REGISTRO DE ASISTENCIA Y PARTICIPACIÓN',
+        mL + useW / 2,                // centro horizontal real de la caja
+        y + tituloH / 2 + 3.3,        // baseline ≈ centro vertical (9.5pt)
+        { align: 'center' }
+      );
+
+      y += tituloH; 
+
+      // ── Información de la persona ──────────────────────────
+      celda(mL, y, etqW, rowH, 'NOMBRE:', true, FONDO_SECUNDARIO);
+      celda(mL + etqW, y, valW, rowH, PERSONA_INDEPENDIENTE.nombre);
+      y += rowH;
+
+      celda(mL, y, etqW, rowH, 'CÉDULA:', true, FONDO_SECUNDARIO);
+      celda(mL + etqW, y, valW, rowH, PERSONA_INDEPENDIENTE.cedula);
+      y += rowH;
+
+      // ── Año ───────────────────────────────────────────────
+      celda(mL, y, etqW, rowH, 'AÑO:', true, FONDO_SECUNDARIO);
+      celda(mL + etqW, y, valW, rowH, año.toString());
+      y += rowH + 2;
+
+      // ── Tabla de asistencia ────────────────────────────────
+      const headers = ['N°', 'APELLIDOS Y NOMBRES', 'CÉDULA', 'CARGO', 'ESTADO / FIRMA'];
+      const rows = registros.map((r, idx) => [
+        idx + 1,
+        r.usuario_nombre,
+        r.cedula_identidad || '—',
+        r.usuario_cargo,
+        r.estado ? r.estado.charAt(0).toUpperCase() + r.estado.slice(1) : '—',
+      ]);
+
+      autoTable(doc, {
+        head: [headers],
+        body: rows,
+        startY: y,
+        styles: {
+          fontSize: 9,
+          cellPadding: 2.5,
+          textColor: [0, 0, 0],
+          lineColor: [0, 0, 0],
+          lineWidth: 0.3
+        },
+        headStyles: {
+          fillColor: FONDO_PRINCIPAL,
+          textColor: [0, 0, 0],
+          lineColor: [0, 0, 0],
+          lineWidth: 0.3,
+          fontStyle: 'bold',
+          halign: 'center'
+        },
+        alternateRowStyles: { fillColor: FONDO_SECUNDARIO },
+        columnStyles: {
+          0: { cellWidth: 9.5, halign: 'center' },
+          1: { cellWidth: 60, halign: 'center' },
+          2: { cellWidth: 30, halign: 'center' },
+          3: { cellWidth: 48, halign: 'center' },
+          4: { cellWidth: 35, halign: 'center' },
+        },
+      });
+
+      const finalY = doc.lastAutoTable.finalY + 10;
+      const espacioDisponible = pageH - finalY - 15;
+
+      const ancho1 = 60;
+      const ancho2 = 60;
+      const ancho3 = useW - ancho1 - ancho2;
+      const cuadroAlto = 25;
+
+      let yCuadros = pageH - cuadroAlto - 15;
+
+      const x1 = mL;
+      const x2 = x1 + ancho1;
+      const x3 = x2 + ancho2;
+
+      dibujarCuadro(x1, yCuadros, ancho1, cuadroAlto, 'PLATAFORMA VIRTUAL', '');
+      dibujarCuadro(x2, yCuadros, ancho2, cuadroAlto, adminUser.proceso_name || 'PROCESO', 'PROCESO RESPONSABLE');
+      dibujarCuadro(x3, yCuadros, ancho3, cuadroAlto, '', 'CAPACITADORA');
+
+      if (firmaDataUrl) {
+        doc.addImage(firmaDataUrl, 'PNG', x3 + ((ancho3 - 35) / 2), yCuadros - 2, 35, 15);
+      }
+    };
+
+    // Generar sección 2025
+    if (registros2025.length > 0) {
+      generarSeccionPDF(registros2025, 2025, true);
+    }
+
+    // Generar sección 2026
+    if (registros2026.length > 0) {
+      generarSeccionPDF(registros2026, 2026, registros2025.length === 0);
+    }
+
+    // Agregar números de página
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Página ${i} de ${totalPages}`, pageW - mR, pageH - 6, { align: 'right' });
+    }
+
+    const nombreArchivo = `PDF_Independiente_${PERSONA_INDEPENDIENTE.nombre.replace(/\s+/g, '_')}.pdf`;
+    doc.save(nombreArchivo);
+  };
+
   // ── Render ────────────────────────────────────────────────────
   if (noAutorizado) {
     return (
@@ -799,6 +1035,15 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
             style={{ opacity: pdfActivo ? 1 : 0.45, cursor: pdfActivo ? 'pointer' : 'not-allowed' }}
           >
             <Download size={15} className="me-1" /> PDF 2025
+          </button>
+
+          <button
+            className="btn-download-pdf"
+            onClick={exportarPDFIndependiente}
+            title="Exportar PDF Independiente (Estrada Pendolema Carmen Leonor)"
+            style={{ opacity: 1, cursor: 'pointer' }}
+          >
+            <Download size={15} className="me-1" /> PDF Independiente
           </button>
         </div>
       </div>
