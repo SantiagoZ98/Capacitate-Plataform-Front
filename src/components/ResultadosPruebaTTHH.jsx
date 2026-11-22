@@ -375,6 +375,119 @@ export default function ResultadosPruebaTTHH() {
     docFinal.save(`Certificados_Todos_Octubre2025_${new Date().toISOString().split("T")[0]}.pdf`);
   };
 
+  // DESCARGAR CERTIFICADO INDIVIDUAL (Estrada Pendolema Carmen Leonor - 2025 + 2026)
+  const descargarCertificadoIndividual = async () => {
+    const CEDULA_INDEPENDIENTE = '0201682440';
+    const NOMBRE_INDEPENDIENTE = 'Estrada Pendolema Carmen Leonor';
+
+    // Buscar la persona en los datos
+    const persona = datos.find(d => String(d.cedula).trim() === CEDULA_INDEPENDIENTE);
+
+    if (!persona || !persona.aprobado) {
+      alert(`No se encontró a ${NOMBRE_INDEPENDIENTE} en los registros o no está aprobada.`);
+      return;
+    }
+
+    {/*
+    const toBase64 = (url) =>
+      fetch(url)
+        .then((r) => r.blob())
+        .then(
+          (blob) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            })
+        );
+
+       
+    const [logoBase64, firmaBase64] = await Promise.all([
+      toBase64("/img/safemedic.png"),
+      toBase64("/img/firma.png"),
+    ]);
+    */}
+    const docFinal = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+
+    // Función auxiliar para generar una página de certificado
+    const generarPaginaCertificado = (doc, personaData, fecha, esFirstPage = false) => {
+      if (!esFirstPage) {
+        doc.addPage();
+      }
+
+      const W = doc.internal.pageSize.getWidth();
+      const H = doc.internal.pageSize.getHeight();
+
+      const azulFondo1 = "#0d2d3e";
+      const azulFondo2 = "#00b8c6";
+      const dorado = "#d4af37";
+      const line = "#146781";
+
+      doc.setFillColor(azulFondo2);
+      doc.triangle(0, H, W * 0.40, H, 0, H * 0.5, "F");
+
+      doc.setFillColor(azulFondo1);
+      doc.triangle(0, 0, W * 0.28, 0, W * 0, H - 60, "F");
+
+      doc.setFillColor(dorado);
+      doc.circle(W * 0.08, H * 0.10, W * 0.07, "F");
+
+      //doc.addImage(logoBase64, "PNG", W - 85, 5, 75, 25);
+      doc.setFont("garamond", "bold");
+      doc.setFontSize(70);
+      doc.setTextColor("#d4af37");
+      doc.text("CERTIFICADO", W / 2 + 40, 65, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(16);
+      doc.setTextColor("#444444");
+      doc.text("Otorgado a", W / 2 + 40, 80, { align: "center" });
+
+      doc.setFont("times", "italic");
+      doc.setFontSize(35);
+      doc.setTextColor("#000000");
+      doc.text(personaData.nombre_completo, W / 2 + 30, 95, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(14);
+      doc.setTextColor("#000000");
+      doc.text(
+        "Por haber participado con éxito en la capacitación que abarca los siguientes temas:",
+        W / 2 + 35,
+        105,
+        { align: "center" }
+      );
+      doc.setFontSize(12);
+      doc.text("• Derechos laborales de hombres y mujeres", W / 2 + 40, 115, { align: "center" });
+      doc.text("• Igualdad de género", W / 2 + 18, 125, { align: "center" });
+      doc.text("• Erradicación de la violencia y no discriminación", W / 2 + 44, 135, { align: "center" });
+      doc.text("• Otros relacionados para establecer el trabajo de igual valor", W / 2 + 55, 145, { align: "center" });
+
+      doc.setFontSize(15);
+      doc.setTextColor("#000000");
+      doc.text(`Fecha: ${fecha}`, W / 2 + 105, 155, { align: "center" });
+      doc.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
+
+      doc.setDrawColor(line);
+      doc.setLineWidth(0.8);
+      doc.line(W / 2, H - 25, W / 2 + 85, H - 25);
+
+      //doc.addImage(firmaBase64, "PNG", W / 2 + 10, H - 58, 65, 32);
+      doc.setFont("times", "italic");
+      doc.text("Verónica Navas", W / 2 + 40, H - 15, { align: "center" });
+      doc.text("CAPACITADORA", W / 2 + 40, H - 7, { align: "center" });
+    };
+
+    // Generar certificado 2025
+    generarPaginaCertificado(docFinal, persona, "Agosto 2025", true);
+
+    // Generar certificado 2026
+    generarPaginaCertificado(docFinal, persona, "Octubre 2026", false);
+
+    docFinal.save(`Certificado_Independiente_${persona.nombre_completo.replace(/\s+/g, '_')}.pdf`);
+  };
+
   // ── Render ────────────────────────────────────────────────────
   if (noAutorizado) {
     return (
@@ -407,6 +520,10 @@ export default function ResultadosPruebaTTHH() {
           <button className="btn-anio-2025" onClick={descargarTodosCertificados2025}>
             <i className="bi bi-file-earmark-pdf me-1"></i>
             Descargar Todos (2025)
+          </button>
+          <button className="btn-certificado-ind" onClick={descargarCertificadoIndividual}>
+            <i className="bi bi-file-earmark-pdf me-1"></i>
+            Certificados Ind.
           </button>
           <button className="btn btn-outline-secondary btn-sm" onClick={cargarDatos}>
             <i className="bi bi-arrow-clockwise me-1"></i>

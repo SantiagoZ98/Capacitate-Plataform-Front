@@ -1043,7 +1043,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
             title="Exportar PDF Independiente (Estrada Pendolema Carmen Leonor)"
             style={{ opacity: 1, cursor: 'pointer' }}
           >
-            <Download size={15} className="me-1" /> PDF Independiente
+            <Download size={15} className="me-1" /> PDF Ind.
           </button>
         </div>
       </div>
