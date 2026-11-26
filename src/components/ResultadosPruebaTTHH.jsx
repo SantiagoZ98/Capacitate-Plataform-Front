@@ -51,7 +51,10 @@ export default function ResultadosPruebaTTHH() {
   const EXCLUIDOS_2025 = [
     { cedula: '0201682440', nombre: 'Estrada Pendolema Carmen Leonor' },
     { cedula: '1722582309', nombre: 'Salazar Ulloa Cristian Alexander' },
-    { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
+    { cedula: '0503974438', nombre: 'Curay Mangui Alexis Bladimir' },
+    { cedula: '1750520551', nombre: 'Quishpe Chanatasig Carlos Patricio' },
+    { cedula: '1711624369', nombre: 'Valencia Ortuño Marcelo' },
+    { cedula: '1718413170', nombre: 'Aguinaga Vargas Mario' }
   ];
 
   // Función auxiliar para extraer el año de una fecha
@@ -395,7 +398,7 @@ export default function ResultadosPruebaTTHH() {
 
       docFinal.setFontSize(15);
       docFinal.setTextColor("#000000");
-      docFinal.text("Fecha: Junio 2025", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Fecha: Agosto 2025", W / 2 + 105, 155, { align: "center" });
       docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
 
       docFinal.setDrawColor(line);
