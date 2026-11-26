@@ -878,6 +878,51 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
       celda(mL + etqW, y, valW, rowH, año.toString());
       y += rowH + 2;
 
+      // ── Dimensiones de columnas ────────────────────────────────
+      const dimEtqW  = 35;                       // columna etiqueta
+      const dimRowH  = 8;                        // altura fila estándar
+      const dimValW  = useW - dimEtqW;           // columna valor (fila simple)
+
+      // ── Fila 1: TEMA ───────────────────────────────────────────
+      celda(mL,        y, dimEtqW, dimRowH, 'TEMA:',        true, FONDO_SECUNDARIO);
+      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Capacitación');
+      y += dimRowH;
+
+      // ── Fila 2: FECHA | DURACIÓN ────────────────────────────
+      const dimMitad     = (useW - dimEtqW * 2) / 2;
+      const dimXFechaVal = mL + dimEtqW;
+      const dimXRespEtq  = dimXFechaVal + dimMitad;
+      const dimXRespVal  = dimXRespEtq + dimEtqW;
+      const dimRespValW  = useW - dimEtqW * 2 - dimMitad;
+
+      const fechaFormat = registros.length > 0 ? formatearFecha(registros[0].inicio_en) : '—';
+      celda(mL,        y, dimEtqW,    dimRowH, 'FECHA (dd/mm/aa):',        true, FONDO_SECUNDARIO);
+      celda(dimXFechaVal, y, dimMitad,   dimRowH, fechaFormat);
+  
+      celda(dimXRespEtq,  y, dimEtqW,    dimRowH, 'DURACIÓN:',  true, FONDO_SECUNDARIO);
+      celda(dimXRespVal,  y, dimRespValW, dimRowH, '40 horas');
+      y += dimRowH;
+
+      // FILA 3: LUGAR + RESPONSABLE
+      const dimMitad2 = (useW - dimEtqW * 2)/2;
+      const dimXLugar = mL + dimEtqW;
+      const dimXResponsable = dimXLugar + dimMitad2;
+      const dimRespValW2 = useW - dimEtqW * 2 - dimMitad2;
+
+      celda(mL,   y, dimEtqW,   dimRowH, 'LUGAR:', true, FONDO_SECUNDARIO);
+      celda(dimXLugar, y, dimMitad2, dimRowH, 'Plataforma Virtual');
+
+      celda(dimXResponsable, y, dimEtqW, dimRowH, 'RESPONSABLE', true, FONDO_SECUNDARIO);
+      celda(dimXResponsable + dimEtqW, y, dimRespValW2, dimRowH, responsable);
+      y += dimRowH;
+
+      // ── Fila 4: DIRIGIDO A ─────────────────────────────────────
+      celda(mL,        y, dimEtqW, dimRowH, 'DIRIGIDO A:', true, FONDO_SECUNDARIO);
+      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Personal independiente');
+      y += dimRowH;
+
+      y += 2;
+
       // ── Tabla de asistencia ────────────────────────────────
       const headers = ['N°', 'APELLIDOS Y NOMBRES', 'CÉDULA', 'CARGO', 'ESTADO / FIRMA'];
       const rows = registros.map((r, idx) => [
