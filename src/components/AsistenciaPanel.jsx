@@ -884,7 +884,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
       const fechaFormat = registros.length > 0 ? formatearFecha(registros[0].inicio_en) : '—';
       celda(mL,        y, dimEtqW,    dimRowH, 'FECHA (dd/mm/aa):',        true, FONDO_SECUNDARIO);
-      celda(dimXFechaVal, y, dimMitad,   dimRowH, fechaFormat);
+      celda(dimXFechaVal, y, dimMitad,   dimRowH, '20/08/2025');
   
       celda(dimXRespEtq,  y, dimEtqW,    dimRowH, 'DURACIÓN:',  true, FONDO_SECUNDARIO);
       celda(dimXRespVal,  y, dimRespValW, dimRowH, '40 horas');
@@ -905,7 +905,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
       // ── Fila 4: DIRIGIDO A ─────────────────────────────────────
       celda(mL,        y, dimEtqW, dimRowH, 'DIRIGIDO A:', true, FONDO_SECUNDARIO);
-      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Personal independiente');
+      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Empleada Privada');
       y += dimRowH;
 
       y += 2;
