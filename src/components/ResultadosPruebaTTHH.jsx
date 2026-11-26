@@ -44,15 +44,53 @@ export default function ResultadosPruebaTTHH() {
     }
   };
 
+  // ── Listas de personas excluidas por año ───────────────────
+  const EXCLUIDOS_2026 = [
+    { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
+  ];
+  const EXCLUIDOS_2025 = [
+    { cedula: '1722582309', nombre: 'Salazar Ulloa Cristian Alexander' },
+    { cedula: '0503974438', nombre: 'Curay Mangui Alexis Bladimir' },
+    { cedula: '1750520551', nombre: 'Quishpe Chanatasig Carlos Patricio' },
+    { cedula: '1711624369', nombre: 'Valencia Ortuño Marcelo' },
+    { cedula: '1718413170', nombre: 'Aguinaga Vargas Mario' }
+  ];
+
+  // Función auxiliar para extraer el año de una fecha
+  const extraerAño = (fechaStr) => {
+    if (!fechaStr) return null;
+    try {
+      const d = new Date(fechaStr);
+      return d.getFullYear();
+    } catch {
+      return null;
+    }
+  };
+
   const datosFiltrados = datos.filter((r) => {
     if (filtro === "aprobados") return r.aprobado;
     if (filtro === "reprobados") return !r.aprobado;
     return true;
   });
 
-  // EXPORTAR EXCEL con aprobados
+  // Filtro CON exclusión para 2026
+  const registrosFiltrados2026 = datosFiltrados.filter(r => {
+    const anioCurso = extraerAño(r.ultima_fecha);
+    const cedula = String(r.cedula ?? '').trim();
+    const esExcluido = anioCurso === 2026 && EXCLUIDOS_2026.some(e => e.cedula === cedula);
+    return !esExcluido;
+  });
+
+  // Filtro CON exclusión para 2025
+  const registrosFiltrados2025 = datosFiltrados.filter(r => {
+    const cedula = String(r.cedula ?? '').trim();
+    const esExcluido = EXCLUIDOS_2025.some(e => e.cedula === cedula);
+    return !esExcluido;
+  });
+
+  // EXPORTAR EXCEL con aprobados (excluyendo excepciones)
   const exportarExcel = () => {
-    const aprobados = datos.filter((r) => r.aprobado);
+    const aprobados = registrosFiltrados2026.filter((r) => r.aprobado);
     const filas = aprobados.map((r) => ({
       "Nombre / Cédula": r.nombre_completo,
       "Cédula": r.cedula,
@@ -173,9 +211,9 @@ export default function ResultadosPruebaTTHH() {
     doc.save(`Certificado_${persona.nombre_completo}.pdf`);
   };
 
-  // DESCARGAR TODOS LOS CERTIFICADOS EN UN SOLO PDF
+  // DESCARGAR TODOS LOS CERTIFICADOS EN UN SOLO PDF (2026 con exclusiones)
   const descargarTodosCertificados = async () => {
-    const aprobados = datos.filter((r) => r.aprobado && String(r.cedula).trim() !== "1726681941");
+    const aprobados = registrosFiltrados2026.filter((r) => r.aprobado);
     if (aprobados.length === 0) {
       alert("No hay certificados para descargar");
       return;
@@ -276,7 +314,7 @@ export default function ResultadosPruebaTTHH() {
 
   // DESCARGAR TODOS LOS CERTIFICADOS CON FECHA OCTUBRE 2025 EN UN SOLO PDF
   const descargarTodosCertificados2025 = async () => {
-    const aprobados = datos.filter((r) => r.aprobado && String(r.cedula).trim() !== "1722582309");
+    const aprobados = registrosFiltrados2025.filter((r) => r.aprobado);
     if (aprobados.length === 0) {
       alert("No hay certificados para descargar");
       return;
