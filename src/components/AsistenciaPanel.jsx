@@ -864,19 +864,6 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
       y += tituloH; 
 
-      // ── Información de la persona ──────────────────────────
-      celda(mL, y, etqW, rowH, 'NOMBRE:', true, FONDO_SECUNDARIO);
-      celda(mL + etqW, y, valW, rowH, PERSONA_INDEPENDIENTE.nombre);
-      y += rowH;
-
-      celda(mL, y, etqW, rowH, 'CÉDULA:', true, FONDO_SECUNDARIO);
-      celda(mL + etqW, y, valW, rowH, PERSONA_INDEPENDIENTE.cedula);
-      y += rowH;
-
-      // ── Año ───────────────────────────────────────────────
-      celda(mL, y, etqW, rowH, 'AÑO:', true, FONDO_SECUNDARIO);
-      celda(mL + etqW, y, valW, rowH, año.toString());
-      y += rowH + 2;
 
       // ── Dimensiones de columnas ────────────────────────────────
       const dimEtqW  = 35;                       // columna etiqueta
@@ -885,7 +872,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
 
       // ── Fila 1: TEMA ───────────────────────────────────────────
       celda(mL,        y, dimEtqW, dimRowH, 'TEMA:',        true, FONDO_SECUNDARIO);
-      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Capacitación');
+      celda(mL + dimEtqW, y, dimValW, dimRowH, 'Igualdad Laboral y No Discriminación');
       y += dimRowH;
 
       // ── Fila 2: FECHA | DURACIÓN ────────────────────────────
@@ -980,9 +967,11 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
       dibujarCuadro(x2, yCuadros, ancho2, cuadroAlto, adminUser.proceso_name || 'PROCESO', 'PROCESO RESPONSABLE');
       dibujarCuadro(x3, yCuadros, ancho3, cuadroAlto, '', 'CAPACITADORA');
 
+      {/*
       if (firmaDataUrl) {
         doc.addImage(firmaDataUrl, 'PNG', x3 + ((ancho3 - 35) / 2), yCuadros - 2, 35, 15);
       }
+        */}
     };
 
     // Generar sección 2025
