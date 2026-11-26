@@ -207,7 +207,7 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
     
 
     // FECHA FIJA 2025
-    const fechaInicioCurso = '18/08/2025';
+    const fechaInicioCurso = '25/06/2025';
 
     const doc   = new jsPDF('portrait', 'mm', 'a4');
     const pageW = doc.internal.pageSize.getWidth();   // 210mm
