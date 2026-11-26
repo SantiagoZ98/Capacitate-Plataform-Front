@@ -359,7 +359,7 @@ export default function ResultadosPruebaTTHH() {
 
       docFinal.setFontSize(15);
       docFinal.setTextColor("#000000");
-      docFinal.text("Fecha: Agosto 2025", W / 2 + 105, 155, { align: "center" });
+      docFinal.text("Fecha: Junio 2025", W / 2 + 105, 155, { align: "center" });
       docFinal.text("Duración: 40 horas", W / 2 - 35, 155, { align: "center" });
 
       docFinal.setDrawColor(line);
