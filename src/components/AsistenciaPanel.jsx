@@ -89,7 +89,8 @@ export default function AsistenciaPanel({ asistenciaUrl = '/api/inscripciones/as
   ];
   const EXCLUIDOS_2025 = [
     { cedula: '1722582309', nombre: 'Salazar Ulloa Cristian Alexander' },
-    { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
+    { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' },
+    { cedula: '0201682440', nombre: 'Estrada Pendolema Carmen Leonor' },
   ];
 
   // Función auxiliar para extraer el año de una fecha
