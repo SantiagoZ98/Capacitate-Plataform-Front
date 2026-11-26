@@ -49,7 +49,7 @@ export default function ResultadosPruebaTTHH() {
     { cedula: '1726681941', nombre: 'Rodríguez Cabeza Edison Michael' }
   ];
   const EXCLUIDOS_2025 = [
-    { cedula: '0201682440', nombre: 'Estrada Pendolema Carmen Leonor' }
+    { cedula: '0201682440', nombre: 'Estrada Pendolema Carmen Leonor' },
     { cedula: '1722582309', nombre: 'Salazar Ulloa Cristian Alexander' },
     { cedula: '0503974438', nombre: 'Curay Mangui Alexis Bladimir' },
     { cedula: '1750520551', nombre: 'Quishpe Chanatasig Carlos Patricio' },
